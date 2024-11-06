@@ -3,9 +3,9 @@ Contributors: pimwick
 Donate link: https://paypal.me/pimwick
 Tags: woocommerce, gift cards, gift certificates, vouchers, store credit
 Requires at least: 4.5
-Tested up to: 6.6
+Tested up to: 6.7
 Requires PHP: 5.6
-Stable tag: 2.3
+Stable tag: 2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -46,7 +46,7 @@ Gift Cards are convenient and increase sales organically. the WooCommerce Gift C
 > * **QR Codes** - Include a QR code on the gift card email, PDF, or both.
 > * **REST API** - Adheres to the WordPress and WooCommerce REST API standards.
 
-Compatible with WooCommerce 3.0 and higher.
+Compatible with WooCommerce 4.0 and higher.
 
 Available in the following languages:
 * Arabic
@@ -89,6 +89,9 @@ The following currency switcher plugins are supported:
 
 == Changelog ==
 
+= 2.4 =
+* Added compatibility declaration for the WooCommerce Price Based on Country plugin. Updated WooCommerce minimum version requirement in readme. Compatibility with WordPress 6.7 and WooCommerce 9.4.
+
 = 2.3 =
 * Added new hooks pwgc_admin_search_results_row_before_number, pwgc_admin_search_results_row_after_number. Remove blank values from notifications array. Compatibility with WooCommerce 9.3.
 
@@ -116,15 +119,12 @@ The following currency switcher plugins are supported:
 = 1.251 =
 * Confirmed compatibility with WooCommerce 8.4
 
-= 1.250 =
-* Confirmed compatibility with WooCommerce 8.3
-
 = Previous versions =
 * See changelog.txt
 
 == Upgrade Notice ==
 
-= 2.3 =
-* Added new hooks pwgc_admin_search_results_row_before_number, pwgc_admin_search_results_row_after_number. Remove blank values from notifications array. Compatibility with WooCommerce 9.3.
+= 2.4 =
+* Added compatibility declaration for the WooCommerce Price Based on Country plugin. Updated WooCommerce minimum version requirement in readme. Compatibility with WordPress 6.7 and WooCommerce 9.4.
 
 

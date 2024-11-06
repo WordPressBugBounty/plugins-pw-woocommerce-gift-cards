@@ -3,13 +3,13 @@
  * Plugin Name: PW WooCommerce Gift Cards
  * Plugin URI: https://www.pimwick.com/gift-cards/
  * Description: Sell gift cards in your WooCommerce store.
- * Version: 2.3
+ * Version: 2.4
  * Author: Pimwick, LLC
  * Author URI: https://www.pimwick.com
  * Text Domain: pw-woocommerce-gift-cards
  * Domain Path: /languages
  * WC requires at least: 4.0
- * WC tested up to: 9.3
+ * WC tested up to: 9.4
  * Requires Plugins: woocommerce
 */
 
@@ -30,7 +30,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
-define( 'PWGC_VERSION', '2.3' );
+define( 'PWGC_VERSION', '2.4' );
 
 defined( 'ABSPATH' ) or exit;
 
@@ -189,6 +189,12 @@ final class PW_Gift_Cards {
         if ( class_exists( 'WC_Aelia_CurrencySwitcher' ) && isset( $GLOBALS[WC_Aelia_CurrencySwitcher::$plugin_slug] ) ) {
             add_action( 'pw_gift_cards_pending_email_notification', array( $GLOBALS[WC_Aelia_CurrencySwitcher::$plugin_slug], 'track_order_notification' ), 5, 1 );
         }
+
+        // WooCommerce Price Based on Country by Oscar Gare
+        add_filter( 'wc_price_based_country_third_party_product_types', function( $types ) {
+            $types[PWGC_PRODUCT_TYPE_SLUG] = PWGC_PRODUCT_TYPE_NAME;
+            return $types;
+        } );
 
         // Fixes compatibility issue with the Variation Swatches for WooCommerce plugin by Emran Ahmed.
         add_filter( 'default_wvs_variation_attribute_options_html', array( $this, 'default_wvs_variation_attribute_options_html' ), 10, 3 );
