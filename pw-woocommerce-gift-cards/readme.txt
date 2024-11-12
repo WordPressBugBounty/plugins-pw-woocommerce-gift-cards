@@ -5,7 +5,7 @@ Tags: woocommerce, gift cards, gift certificates, vouchers, store credit
 Requires at least: 4.5
 Tested up to: 6.7
 Requires PHP: 5.6
-Stable tag: 2.5
+Stable tag: 2.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -89,6 +89,9 @@ The following currency switcher plugins are supported:
 
 == Changelog ==
 
+= 2.6 =
+* Added Polish translation.
+
 = 2.5 =
 * Changed hook for loading translations file to avoid warning in WordPress 6.7.
 
@@ -116,15 +119,12 @@ The following currency switcher plugins are supported:
 = 1.253 =
 * Fixed a conflict with Discount Rules for WooCommerce by Flycart. Compatibility with WordPress 6.5 and WooCommerce 8.7
 
-= 1.252 =
-* Confirmed compatibility with WooCommerce 8.6
-
 = Previous versions =
 * See changelog.txt
 
 == Upgrade Notice ==
 
-= 2.5 =
-* Changed hook for loading translations file to avoid warning in WordPress 6.7.
+= 2.6 =
+* Added Polish translation.
 
 
