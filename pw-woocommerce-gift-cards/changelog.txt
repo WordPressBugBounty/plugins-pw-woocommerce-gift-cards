@@ -1,3 +1,6 @@
+= 2.5 =
+* Changed hook for loading translations file to avoid warning in WordPress 6.7.
+
 = 2.4 =
 * Added compatibility declaration for the WooCommerce Price Based on Country plugin. Updated WooCommerce minimum version requirement in readme. Compatibility with WordPress 6.7 and WooCommerce 9.4.
 
