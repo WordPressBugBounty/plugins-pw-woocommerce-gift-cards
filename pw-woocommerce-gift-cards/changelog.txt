@@ -1,3 +1,6 @@
+= 2.7 =
+* Compatibility fix for translations in WordPress 6.7 Updated readme.txt file to include Polish translation. Prevent an exception when upgrading to the Pro version when the free version is still activated.
+
 = 2.6 =
 * Added Polish translation.
 

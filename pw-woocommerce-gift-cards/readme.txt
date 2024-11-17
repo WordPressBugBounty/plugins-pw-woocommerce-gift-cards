@@ -5,7 +5,7 @@ Tags: woocommerce, gift cards, gift certificates, vouchers, store credit
 Requires at least: 4.5
 Tested up to: 6.7
 Requires PHP: 5.6
-Stable tag: 2.6
+Stable tag: 2.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,6 +16,10 @@ Sell gift cards to your WooCommerce store, in just a few minutes!
 **Your WooCommerce store should offer gift cards!**
 
 Gift Cards are convenient and increase sales organically. the WooCommerce Gift Cards plugin makes it easy to sell gift cards to your store. So easy to get started, you can be selling gift cards for your WooCommerce store in 5 minutes!
+
+The PW WooCommerce Gift Cards plugin is designed for online stores using WooCommerce, enabling them to sell digital gift cards seamlessly. With this plugin, customers can purchase gift cards by selecting a predefined amount, entering the recipient’s email, and adding a personalized message. The recipient receives an email containing the gift card code, which they can apply during checkout to redeem the balance.
+
+For store owners, the plugin integrates smoothly with WooCommerce, allowing for easy creation and management of gift card products. It utilizes WooCommerce’s email template system to ensure consistent and professional communication with customers. Additionally, the plugin supports guest checkout, meaning recipients can redeem gift cards without needing to create an account. This straightforward approach enhances the shopping experience and provides an additional avenue for customer engagement.
 
 **Purchasing** Similar to Amazon.com gift cards, the customer can specify the amount, recipient, and message when purchasing.
 
@@ -58,6 +62,7 @@ Available in the following languages:
 * Galician
 * German
 * Italian
+* Polish
 * Portuguese
 * Romanian
 * Russian
@@ -89,6 +94,9 @@ The following currency switcher plugins are supported:
 
 == Changelog ==
 
+= 2.7 =
+* Compatibility fix for translations in WordPress 6.7 Updated readme.txt file to include Polish translation. Prevent an exception when upgrading to the Pro version when the free version is still activated.
+
 = 2.6 =
 * Added Polish translation.
 
@@ -116,15 +124,12 @@ The following currency switcher plugins are supported:
 = 1.254 =
 * Revised tags in readme.txt Added requirement flag for WooCommerce. Confirmed compatibility with WooCommerce 8.8
 
-= 1.253 =
-* Fixed a conflict with Discount Rules for WooCommerce by Flycart. Compatibility with WordPress 6.5 and WooCommerce 8.7
-
 = Previous versions =
 * See changelog.txt
 
 == Upgrade Notice ==
 
-= 2.6 =
-* Added Polish translation.
+= 2.7 =
+* Compatibility fix for translations in WordPress 6.7 Updated readme.txt file to include Polish translation. Prevent an exception when upgrading to the Pro version when the free version is still activated.
 
 
