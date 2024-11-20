@@ -2,6 +2,20 @@
 
 defined( 'ABSPATH' ) or exit;
 
+if ( ! function_exists( 'pwgc_set_table_names' ) ) {
+    function pwgc_set_table_names() {
+        global $wpdb;
+
+        if ( true === PWGC_MULTISITE_SHARED_DATABASE ) {
+            $wpdb->pimwick_gift_card = $wpdb->base_prefix . 'pimwick_gift_card';
+            $wpdb->pimwick_gift_card_activity = $wpdb->base_prefix . 'pimwick_gift_card_activity';
+        } else {
+            $wpdb->pimwick_gift_card = $wpdb->prefix . 'pimwick_gift_card';
+            $wpdb->pimwick_gift_card_activity = $wpdb->prefix . 'pimwick_gift_card_activity';
+        }
+    }
+}
+
 if ( ! function_exists( 'pwgc_get_designs' ) ) {
     function pwgc_get_designs() {
         global $pw_gift_cards;

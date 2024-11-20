@@ -1,3 +1,6 @@
+= 2.9 =
+* Improved the Swedish translations. Fixed a Table Does Not Exist error.
+
 = 2.8 =
 * Fixed an issue with new installations where the tables aren't automatically created.
 

@@ -3,7 +3,7 @@
  * Plugin Name: PW WooCommerce Gift Cards
  * Plugin URI: https://www.pimwick.com/gift-cards/
  * Description: Sell gift cards in your WooCommerce store.
- * Version: 2.8
+ * Version: 2.9
  * Author: Pimwick, LLC
  * Author URI: https://www.pimwick.com
  * Text Domain: pw-woocommerce-gift-cards
@@ -108,7 +108,7 @@ add_action( 'plugins_loaded', function() {
         return;
     }
 
-    define( 'PWGC_VERSION', '2.8' );
+    define( 'PWGC_VERSION', '2.9' );
 
     load_plugin_textdomain( 'pw-woocommerce-gift-cards', false, basename( dirname( __FILE__ ) ) . '/languages' );
 
@@ -120,8 +120,11 @@ add_action( 'plugins_loaded', function() {
         public $ignore_autocomplete_payment_methods;
 
         function __construct() {
-            require_once( PWGC_PLUGIN_ROOT . 'includes/pwgc-database.php' );
             require_once( PWGC_PLUGIN_ROOT . 'includes/pwgc-functions.php' );
+
+            pwgc_set_table_names();
+
+            require_once( PWGC_PLUGIN_ROOT . 'includes/pwgc-database.php' );
             require_once( PWGC_PLUGIN_ROOT . 'includes/class-pw-gift-card.php' );
             require_once( PWGC_PLUGIN_ROOT . 'includes/class-pw-gift-card-activity.php' );
             require_once( PWGC_PLUGIN_ROOT . 'includes/class-pw-gift-card-item-data.php' );

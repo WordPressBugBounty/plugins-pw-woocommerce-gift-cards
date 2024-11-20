@@ -45,11 +45,5 @@ if ( get_option( 'pwgc_database_version' ) != PWGC_VERSION ) {
 
     update_option( 'pwgc_database_version', PWGC_VERSION );
 
-    if ( true === PWGC_MULTISITE_SHARED_DATABASE ) {
-        $wpdb->pimwick_gift_card = $wpdb->base_prefix . 'pimwick_gift_card';
-        $wpdb->pimwick_gift_card_activity = $wpdb->base_prefix . 'pimwick_gift_card_activity';
-    } else {
-        $wpdb->pimwick_gift_card = $wpdb->prefix . 'pimwick_gift_card';
-        $wpdb->pimwick_gift_card_activity = $wpdb->prefix . 'pimwick_gift_card_activity';
-    }
+    pwgc_set_table_names();
 }

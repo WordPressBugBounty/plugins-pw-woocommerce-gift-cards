@@ -5,7 +5,7 @@ Tags: woocommerce, gift cards, gift certificates, vouchers, store credit
 Requires at least: 4.5
 Tested up to: 6.7
 Requires PHP: 5.6
-Stable tag: 2.8
+Stable tag: 2.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,6 +94,9 @@ The following currency switcher plugins are supported:
 
 == Changelog ==
 
+= 2.9 =
+* Improved the Swedish translations. Fixed a Table Does Not Exist error.
+
 = 2.8 =
 * Fixed an issue with new installations where the tables aren't automatically created.
 
@@ -121,15 +124,12 @@ The following currency switcher plugins are supported:
 = 2.0 =
 * Added Slovak translation files. Compatibility with WordPress 6.6 and WooCommerce 9.1.
 
-= 1.255 =
-* WooCommerce 9.0 compatibility.
-
 = Previous versions =
 * See changelog.txt
 
 == Upgrade Notice ==
 
-= 2.8 =
-* Fixed an issue with new installations where the tables aren't automatically created.
+= 2.9 =
+* Improved the Swedish translations. Fixed a Table Does Not Exist error.
 
 
