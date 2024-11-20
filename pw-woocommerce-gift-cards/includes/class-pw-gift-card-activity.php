@@ -118,66 +118,7 @@ class PW_Gift_Card_Activity {
             wp_die( $wpdb->last_error );
         }
     }
-
-    public static function plugin_activate( $network_wide ) {
-        global $wpdb;
-
-        if ( ! current_user_can( 'activate_plugins' ) ) {
-            return;
-        }
-
-        if ( is_multisite() && $network_wide ) {
-            foreach ( $wpdb->get_col( "SELECT blog_id FROM {$wpdb->blogs}" ) as $blog_id ) {
-                switch_to_blog( $blog_id );
-
-                PW_Gift_Card_Activity::create_tables();
-
-                restore_current_blog();
-            }
-        } else {
-            PW_Gift_Card_Activity::create_tables();
-        }
-    }
-
-    public static function create_tables() {
-        global $wpdb;
-
-        // Call this again in case we're multisite and have switched sites.
-        $wpdb->pimwick_gift_card = $wpdb->prefix . 'pimwick_gift_card';
-        $wpdb->pimwick_gift_card_activity = $wpdb->prefix . 'pimwick_gift_card_activity';
-
-        $wpdb->query( "
-            CREATE TABLE IF NOT EXISTS `{$wpdb->pimwick_gift_card_activity}` (
-                `pimwick_gift_card_activity_id` INT NOT NULL AUTO_INCREMENT,
-                `pimwick_gift_card_id` INT NOT NULL,
-                `user_id` BIGINT(20) UNSIGNED NULL DEFAULT NULL,
-                `activity_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                `action` VARCHAR(60) NOT NULL,
-                `amount` DECIMAL(15,6) NULL DEFAULT NULL,
-                `note` TEXT NULL DEFAULT NULL,
-                `reference_activity_id` INT NULL DEFAULT NULL,
-                PRIMARY KEY (`pimwick_gift_card_activity_id`),
-                INDEX `{$wpdb->prefix}ix_pimwick_gift_card_id` (`pimwick_gift_card_id`)
-            );
-        " );
-        if ( $wpdb->last_error != '' ) {
-            wp_die( $wpdb->last_error );
-        }
-
-        // Drop the foreign key constraint if they exists.
-        $foreign_keys = $wpdb->get_results( "
-            SELECT CONSTRAINT_NAME FROM information_schema.TABLE_CONSTRAINTS WHERE CONSTRAINT_SCHEMA = DATABASE() AND TABLE_NAME = '{$wpdb->pimwick_gift_card_activity}' AND CONSTRAINT_TYPE = 'FOREIGN KEY'
-        " );
-
-        foreach ( $foreign_keys as $row ) {
-            $wpdb->query( "
-                ALTER TABLE `{$wpdb->pimwick_gift_card_activity}` DROP FOREIGN KEY `{$row->CONSTRAINT_NAME}`;
-            " );
-        }
-    }
 }
-
-register_activation_hook( PWGC_PLUGIN_FILE, array( 'PW_Gift_Card_Activity', 'plugin_activate' ) );
 
 endif;
 

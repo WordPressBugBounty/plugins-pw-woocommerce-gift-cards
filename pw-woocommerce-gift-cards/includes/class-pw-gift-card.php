@@ -339,51 +339,6 @@ class PW_Gift_Card {
         return $gift_card;
     }
 
-    public static function plugin_activate( $network_wide ) {
-        global $wpdb;
-
-        if ( ! current_user_can( 'activate_plugins' ) ) {
-            return;
-        }
-
-        if ( is_multisite() && $network_wide ) {
-            foreach ( $wpdb->get_col( "SELECT blog_id FROM {$wpdb->blogs}" ) as $blog_id ) {
-                switch_to_blog( $blog_id );
-
-                PW_Gift_Card::create_tables();
-
-                restore_current_blog();
-            }
-        } else {
-            PW_Gift_Card::create_tables();
-        }
-    }
-
-    public static function create_tables() {
-        global $wpdb;
-
-        // Call this again in case we're multisite and have switched sites.
-        $wpdb->pimwick_gift_card = $wpdb->prefix . 'pimwick_gift_card';
-        $wpdb->pimwick_gift_card_activity = $wpdb->prefix . 'pimwick_gift_card_activity';
-
-        $wpdb->query( "
-            CREATE TABLE IF NOT EXISTS `{$wpdb->pimwick_gift_card}` (
-                `pimwick_gift_card_id` INT NOT NULL AUTO_INCREMENT,
-                `number` TEXT NOT NULL,
-                `active` TINYINT(1) NOT NULL DEFAULT 1,
-                `create_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                `expiration_date` DATE NULL,
-                PRIMARY KEY (`pimwick_gift_card_id`),
-                UNIQUE `{$wpdb->prefix}ix_pimwick_gift_card_number` ( `number` (128) )
-            );
-        " );
-
-        if ( $wpdb->last_error != '' ) {
-            wp_die( $wpdb->last_error );
-        }
-    }
-
-
 
     /*
      *
@@ -438,8 +393,6 @@ class PW_Gift_Card {
         return apply_filters( 'pw_gift_cards_random_card_number', $card_number );
     }
 }
-
-register_activation_hook( PWGC_PLUGIN_FILE, array( 'PW_Gift_Card', 'plugin_activate' ) );
 
 endif;
 

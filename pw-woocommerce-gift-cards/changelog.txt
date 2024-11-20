@@ -1,3 +1,6 @@
+= 2.8 =
+* Fixed an issue with new installations where the tables aren't automatically created.
+
 = 2.7 =
 * Compatibility fix for translations in WordPress 6.7 Updated readme.txt file to include Polish translation. Prevent an exception when upgrading to the Pro version when the free version is still activated.
 
