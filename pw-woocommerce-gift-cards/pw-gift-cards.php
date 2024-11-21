@@ -3,7 +3,7 @@
  * Plugin Name: PW WooCommerce Gift Cards
  * Plugin URI: https://www.pimwick.com/gift-cards/
  * Description: Sell gift cards in your WooCommerce store.
- * Version: 2.9
+ * Version: 2.10
  * Author: Pimwick, LLC
  * Author URI: https://www.pimwick.com
  * Text Domain: pw-woocommerce-gift-cards
@@ -108,7 +108,7 @@ add_action( 'plugins_loaded', function() {
         return;
     }
 
-    define( 'PWGC_VERSION', '2.9' );
+    define( 'PWGC_VERSION', '2.10' );
 
     load_plugin_textdomain( 'pw-woocommerce-gift-cards', false, basename( dirname( __FILE__ ) ) . '/languages' );
 
@@ -727,7 +727,7 @@ add_action( 'plugins_loaded', function() {
                 $wpml = $GLOBALS['woocommerce_wpml'];
                 if ( is_object( $wpml ) && property_exists( $wpml, 'multi_currency' ) && is_object( $wpml->multi_currency ) && property_exists( $wpml->multi_currency, 'prices' ) ) {
                     $cs = $wpml->multi_currency->prices;
-                    $currency_code = get_post_meta( $order->get_id(), '_order_currency', true );
+                    $currency_code = $order->get_currency();
                     if ( !empty( $currency_code ) ) {
                         return $cs->convert_price_amount( $amount, $currency_code );
                     }
@@ -738,7 +738,7 @@ add_action( 'plugins_loaded', function() {
             if ( function_exists( 'wmc_get_price' ) ) {
                 $wmc_order_info = get_post_meta( $order->get_id(), 'wmc_order_info', true );
                 if ( is_array( $wmc_order_info ) ) {
-                    $order_currency = get_post_meta( $order->get_id(), '_order_currency', true );
+                    $order_currency = $order->get_currency();
                     $rate = $wmc_order_info[ $order_currency ]['rate'];
                     return $amount * $rate;
                 }
@@ -759,7 +759,7 @@ add_action( 'plugins_loaded', function() {
                 $price_rounder = new WOOMC\Price\Rounder();
                 $price_calculator = new WOOMC\Price\Calculator( $rate_storage, $price_rounder );
 
-                $to = get_post_meta( $order->get_id(), '_order_currency', true );
+                $to = $order->get_currency();
                 $from = $currency_detector->getDefaultCurrency();
 
                 return $price_calculator->calculate( (float) $amount, $to, $from );
@@ -767,7 +767,7 @@ add_action( 'plugins_loaded', function() {
 
             // Currency Switcher for WooCommerce by WP Wham
             if ( is_a( $order, 'WC_Order' ) && function_exists( 'alg_convert_price' ) ) {
-                $order_currency = get_post_meta( $order->get_id(), '_order_currency', true );
+                $order_currency = $order->get_currency();
                 $default_currency = get_option( 'woocommerce_currency' );
                 if ( $order_currency != $default_currency ) {
                     add_filter( 'alg_wc_currency_switcher_correction', array( $this, 'alg_wc_currency_switcher_correction' ), 10, 2 );

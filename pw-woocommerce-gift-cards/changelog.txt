@@ -1,3 +1,6 @@
+= 2.10 =
+* HPOS updates for some currency conversion plugin integrations.
+
 = 2.9 =
 * Improved the Swedish translations. Fixed a Table Does Not Exist error.
 

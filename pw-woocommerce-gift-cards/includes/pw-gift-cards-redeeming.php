@@ -382,12 +382,12 @@ final class PW_Gift_Cards_Redeeming {
 
                 // Multi-Currency for WooCommerce by TIV.NET INC
                 if ( class_exists( 'WOOMC\App' ) ) {
-                    $args['currency'] = get_post_meta( $order->get_id(), '_order_currency', true );
+                    $args['currency'] = $order->get_currency();
                 }
 
                 // Currency Switcher for WooCommerce by WP Wham
                 if ( is_a( $order, 'WC_Order' ) && function_exists( 'alg_get_current_currency_code' ) ) {
-                    $args['currency'] = get_post_meta( $order->get_id(), '_order_currency', true );
+                    $args['currency'] = $order->get_currency();
                 }
 
                 $price = wc_price( $price, $args );
@@ -740,12 +740,12 @@ final class PW_Gift_Cards_Redeeming {
 
                 // Multi-Currency for WooCommerce by TIV.NET INC
                 if ( is_a( $current_order, 'WC_Order' ) && class_exists( 'WOOMC\App' ) ) {
-                    $args['currency'] = get_post_meta( $current_order->get_id(), '_order_currency', true );
+                    $args['currency'] = $current_order->get_currency();
                 }
 
                 // Currency Switcher for WooCommerce by WP Wham
                 if ( is_a( $current_order, 'WC_Order' ) && function_exists( 'alg_get_current_currency_code' ) ) {
-                    $args['currency'] = get_post_meta( $current_order->get_id(), '_order_currency', true );
+                    $args['currency'] = $current_order->get_currency();
                 }
 
                 $gift_card_total = wc_price( $amount, $args );

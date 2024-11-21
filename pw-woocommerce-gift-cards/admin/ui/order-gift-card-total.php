@@ -50,12 +50,12 @@ foreach( $order->get_items( 'pw_gift_card' ) as $line ) {
 
                     // Multi-Currency for WooCommerce by TIV.NET INC
                     if ( is_a( $order, 'WC_Order' ) && class_exists( 'WOOMC\App' ) ) {
-                        $args['currency'] = get_post_meta( $order->get_id(), '_order_currency', true );
+                        $args['currency'] = $order->get_currency();
                     }
 
                     // Currency Switcher for WooCommerce by WP Wham
                     if ( is_a( $order, 'WC_Order' ) && function_exists( 'alg_get_current_currency_code' ) ) {
-                        $args['currency'] = get_post_meta( $order->get_id(), '_order_currency', true );
+                        $args['currency'] = $order->get_currency();
                     }
 
                     echo wc_price( $amount, $args );
