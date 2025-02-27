@@ -5,7 +5,7 @@ Tags: woocommerce, gift cards, gift certificates, vouchers, store credit
 Requires at least: 4.5
 Tested up to: 6.7
 Requires PHP: 5.6
-Stable tag: 2.10
+Stable tag: 2.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,6 +94,9 @@ The following currency switcher plugins are supported:
 
 == Changelog ==
 
+= 2.11 =
+* Fix for integration with the FOX Currency Switcher plugin. Confirmed compatibility with WooCommerce 9.6 Fixed currency formatting on the email design when using the {amount} placeholder.
+
 = 2.10 =
 * HPOS updates for some currency conversion plugin integrations.
 
@@ -121,15 +124,12 @@ The following currency switcher plugins are supported:
 = 2.2 =
 * Fixed an issue when using the WP Optimize plugin with Minify and Merge Javascript enabled.
 
-= 2.1 =
-* Performance improvements.
-
 = Previous versions =
 * See changelog.txt
 
 == Upgrade Notice ==
 
-= 2.10 =
-* HPOS updates for some currency conversion plugin integrations.
+= 2.11 =
+* Fix for integration with the FOX Currency Switcher plugin. Confirmed compatibility with WooCommerce 9.6 Fixed currency formatting on the email design when using the {amount} placeholder.
 
 

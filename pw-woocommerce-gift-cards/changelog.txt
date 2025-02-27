@@ -1,3 +1,6 @@
+= 2.11 =
+* Fix for integration with the FOX Currency Switcher plugin. Confirmed compatibility with WooCommerce 9.6 Fixed currency formatting on the email design when using the {amount} placeholder.
+
 = 2.10 =
 * HPOS updates for some currency conversion plugin integrations.
 

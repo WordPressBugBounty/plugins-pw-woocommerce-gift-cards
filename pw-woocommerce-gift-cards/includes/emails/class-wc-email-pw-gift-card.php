@@ -170,7 +170,7 @@ class WC_Email_PW_Gift_Card extends WC_Email {
         $this->object = $this->create_object( $order_item_id, $gift_card_number, $recipient, $from, $recipient_name, $message, $amount );
 
         $this->add_placeholder( '{gift_card_number}', $this->object->gift_card_number );
-        $this->add_placeholder( '{amount}', $this->object->amount );
+        $this->add_placeholder( '{amount}', strip_tags( wc_price( $this->object->amount ) ) );
         $this->add_placeholder( '{sender}', $this->object->from );
         $this->add_placeholder( '{message}', $this->object->message );
 
@@ -188,6 +188,12 @@ class WC_Email_PW_Gift_Card extends WC_Email {
         }
 
         if ( $this->is_enabled() ) {
+
+            // Fix for FOX Currency Switcher plugin.
+            if ( isset( $GLOBALS['WOOCS'] ) ) {
+                remove_filter( 'woocommerce_currency_symbol', array( $GLOBALS['WOOCS'], 'woocommerce_currency_symbol' ), 9999 );
+            }
+
             $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $attachments );
         }
     }

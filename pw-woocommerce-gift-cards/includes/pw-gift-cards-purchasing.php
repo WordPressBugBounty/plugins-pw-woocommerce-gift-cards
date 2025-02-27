@@ -199,24 +199,7 @@ final class PW_Gift_Cards_Purchasing {
                         }
                     }
 
-                    if (
-                        // Multi Currency for WooCommerce by VillaTheme
-                        function_exists( 'wmc_get_price' )
-
-                        // Multi-Currency for WooCommerce by TIV.NET INC
-                        || class_exists( 'WOOMC\App' )
-
-                        // WooCommerce Currency Switcher by realmag777
-                        || isset( $GLOBALS['WOOCS'] )
-
-                        // Currency Switcher for WooCommerce by WP Wham
-                        || function_exists( 'alg_get_current_currency_code' )
-
-                        // Aelia Currency Switcher
-                        || class_exists( 'WC_Aelia_CurrencySwitcher' )
-                    ) {
-                        $price = apply_filters( 'pwgc_to_default_currency', $price );
-                    }
+                    $price = apply_filters( 'pwgc_to_default_currency', $price );
 
                     $order_item->add_meta_data( $key, $price );
                 } else if ( isset( $cart_item[ $key ] ) ) {
