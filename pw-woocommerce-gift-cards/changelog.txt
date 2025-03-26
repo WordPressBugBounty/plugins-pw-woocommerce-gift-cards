@@ -1,3 +1,6 @@
+= 2.12 =
+* Added create date to primary grid on Balances page. Compatibility with WordPress 6.8 and WooCommerce 9.8.
+
 = 2.11 =
 * Fix for integration with the FOX Currency Switcher plugin. Confirmed compatibility with WooCommerce 9.6 Fixed currency formatting on the email design when using the {amount} placeholder.
 

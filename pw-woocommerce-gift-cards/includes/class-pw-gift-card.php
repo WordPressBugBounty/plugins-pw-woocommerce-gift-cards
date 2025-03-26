@@ -125,6 +125,17 @@ class PW_Gift_Card {
         return $html;
     }
 
+    public function get_create_date_html() {
+        $create_date = $this->get_create_date();
+        if ( !empty( $create_date ) ) {
+            $html = date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $create_date ) );
+        } else {
+            $html = __( 'None', 'pw-woocommerce-gift-cards' );
+        }
+
+        return $html;
+    }
+
     public function has_expired() {
         if ( !empty( $this->get_expiration_date() ) ) {
             $expiration_date = strtotime( $this->get_expiration_date() );

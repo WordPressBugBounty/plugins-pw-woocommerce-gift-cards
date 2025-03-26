@@ -31,6 +31,7 @@ if ( count( $gift_cards ) == 0 ) {
         <tr>
             <th><?php _e( 'Card Number', 'pw-woocommerce-gift-cards' ); ?></th>
             <th><?php _e( 'Balance', 'pw-woocommerce-gift-cards' ); ?></th>
+            <th><?php _e( 'Create Date', 'pw-woocommerce-gift-cards' ); ?></th>
             <th><?php _e( 'Expiration Date', 'pw-woocommerce-gift-cards' ); ?></th>
             <th>&nbsp;</th>
         </tr>
@@ -52,6 +53,11 @@ if ( count( $gift_cards ) == 0 ) {
                     </td>
                     <td class="pwgc-search-result-balance">
                         <?php echo wc_price( $gift_card->get_balance() ); ?>
+                    </td>
+                    <td class="pwgc-search-result-create-date">
+                        <?php
+                            echo $gift_card->get_create_date_html();
+                        ?>
                     </td>
                     <td class="pwgc-search-result-expiration-date">
                         <?php

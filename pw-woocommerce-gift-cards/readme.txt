@@ -3,9 +3,9 @@ Contributors: pimwick
 Donate link: https://paypal.me/pimwick
 Tags: woocommerce, gift cards, gift certificates, vouchers, store credit
 Requires at least: 4.5
-Tested up to: 6.7
-Requires PHP: 5.6
-Stable tag: 2.11
+Tested up to: 6.8
+Requires PHP: 7.4
+Stable tag: 2.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,6 +94,9 @@ The following currency switcher plugins are supported:
 
 == Changelog ==
 
+= 2.12 =
+* Added create date to primary grid on Balances page. Compatibility with WordPress 6.8 and WooCommerce 9.8.
+
 = 2.11 =
 * Fix for integration with the FOX Currency Switcher plugin. Confirmed compatibility with WooCommerce 9.6 Fixed currency formatting on the email design when using the {amount} placeholder.
 
@@ -121,15 +124,12 @@ The following currency switcher plugins are supported:
 = 2.3 =
 * Added new hooks pwgc_admin_search_results_row_before_number, pwgc_admin_search_results_row_after_number. Remove blank values from notifications array. Compatibility with WooCommerce 9.3.
 
-= 2.2 =
-* Fixed an issue when using the WP Optimize plugin with Minify and Merge Javascript enabled.
-
 = Previous versions =
 * See changelog.txt
 
 == Upgrade Notice ==
 
-= 2.11 =
-* Fix for integration with the FOX Currency Switcher plugin. Confirmed compatibility with WooCommerce 9.6 Fixed currency formatting on the email design when using the {amount} placeholder.
+= 2.12 =
+* Added create date to primary grid on Balances page. Compatibility with WordPress 6.8 and WooCommerce 9.8.
 
 
