@@ -321,7 +321,7 @@ function pwgc_woocommerce_variation_option_name( $name, $option = null, $attribu
         $_REQUEST['woocs_block_price_hook'] = true; // Needed for WooCommerce Currency Switcher by realmag777
         $_REQUEST['alg_wc_currency_switcher_correction_ignore'] = true; // Currency Switcher for WooCommerce by WP Wham
 
-        $price = apply_filters( 'pwgc_to_current_currency', $price );
+        $price = apply_filters( 'pwgc_to_current_currency', $price, $name, $product );
 
         return strip_tags( wc_price( $price ) );
     }

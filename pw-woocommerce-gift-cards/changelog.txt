@@ -1,3 +1,6 @@
+= 2.13 =
+* Added support for VillaTheme (CURCY) fixed pricing settings.
+
 = 2.12 =
 * Added create date to primary grid on Balances page. Compatibility with WordPress 6.8 and WooCommerce 9.8.
 

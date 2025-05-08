@@ -3,7 +3,7 @@
  * Plugin Name: PW WooCommerce Gift Cards
  * Plugin URI: https://www.pimwick.com/gift-cards/
  * Description: Sell gift cards in your WooCommerce store.
- * Version: 2.12
+ * Version: 2.13
  * Author: Pimwick, LLC
  * Author URI: https://www.pimwick.com
  * Text Domain: pw-woocommerce-gift-cards
@@ -108,7 +108,7 @@ add_action( 'plugins_loaded', function() {
         return;
     }
 
-                define( 'PWGC_VERSION', '2.12' );
+                                define( 'PWGC_VERSION', '2.13' );
 
     load_plugin_textdomain( 'pw-woocommerce-gift-cards', false, basename( dirname( __FILE__ ) ) . '/languages' );
 
@@ -192,7 +192,7 @@ add_action( 'plugins_loaded', function() {
             add_action( 'woocommerce_order_item_line_item_html', array( $this, 'woocommerce_order_item_line_item_html' ) );
             add_action( 'woocommerce_payment_complete', array( $this, 'maybe_mark_order_completed' ) );
             add_action( 'wcml_is_variable_product', array( $this, 'wcml_is_variable_product' ), 10, 2 );
-            add_filter( 'pwgc_to_current_currency', array( $this, 'pwgc_to_current_currency' ) );
+            add_filter( 'pwgc_to_current_currency', array( $this, 'pwgc_to_current_currency' ), 10, 3 );
             add_filter( 'pwgc_to_default_currency', array( $this, 'pwgc_to_default_currency' ) );
             add_filter( 'pwgc_to_order_currency', array( $this, 'pwgc_to_order_currency' ), 10, 2 );
             add_filter( 'wcumcs_custom_item_price_final', array( $this, 'wcumcs_custom_item_price_final' ), 10, 3 );
@@ -507,7 +507,7 @@ add_action( 'plugins_loaded', function() {
             return pwgc_get_gift_card_product();
         }
 
-        function pwgc_to_current_currency( $amount ) {
+        function pwgc_to_current_currency( $amount, $term = null, $product = null ) {
             // WooCommerce Currency Switcher by realmag777
             if ( isset( $GLOBALS['WOOCS'] ) && method_exists( $GLOBALS['WOOCS'], 'woocs_convert_price' ) ) {
                 return $GLOBALS['WOOCS']->woocs_convert_price( $amount );
@@ -537,9 +537,49 @@ add_action( 'plugins_loaded', function() {
             }
 
             // Multi Currency for WooCommerce by VillaTheme
+            $multi_currency_settings = null;
+            if ( class_exists('WOOMULTI_CURRENCY_Data') ) {
+                $multi_currency_settings = WOOMULTI_CURRENCY_Data::get_ins();
+            } elseif ( class_exists('WOOMULTI_CURRENCY_F_Data' ))
+            {
+                $multi_currency_settings = WOOMULTI_CURRENCY_F_Data::get_ins();
+            }
+
+            if ( $multi_currency_settings && $multi_currency_settings->get_enable() && $multi_currency_settings->get_param( 'enable_fixed_price' ) ) {
+                if ( $term && $product ) {
+                    global $wpdb;
+                    $id = $product->get_id();
+
+                    $result = $wpdb->get_col( "SELECT slug FROM {$wpdb->prefix}terms WHERE name = '$term'" );
+
+                    $term_slug = ( !empty( $result ) ) ? $result[0] : $term;
+
+                    $query = "SELECT postmeta.post_id AS product_id
+                                FROM {$wpdb->prefix}postmeta AS postmeta
+                                    LEFT JOIN {$wpdb->prefix}posts AS products ON ( products.ID = postmeta.post_id )
+                                WHERE postmeta.meta_key LIKE 'attribute_%'
+                                    AND postmeta.meta_value = '$term_slug'
+                                    AND products.post_parent = $id";
+
+                    $variation_id = $wpdb->get_col( $query );
+
+                    if ( is_array( $variation_id ) && $variation_id[0] ) {
+                        $parent = wp_get_post_parent_id( $variation_id[0] );
+
+                        if ( $parent > 0 ) {
+                            $_product = new WC_Product_Variation( $variation_id[0] );
+                            return $_product->get_price();
+                        }
+                    }
+                }
+
+                return $amount;
+            }
+
             if ( function_exists( 'wmc_get_price' ) ) {
                 return wmc_get_price( $amount );
             }
+            // End - Multi Currency for WooCommerce by VillaTheme
 
             // WooCommerce Price Based on Country by Oscar Gare
             if ( function_exists( 'wcpbc_the_zone' ) ) {
