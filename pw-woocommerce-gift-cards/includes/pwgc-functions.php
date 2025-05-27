@@ -158,54 +158,14 @@ if ( ! function_exists( 'pwgc_admin_url' ) ) {
     }
 }
 
-if ( !function_exists( 'pwgc_strtotime' ) ) {
-    // Source: https://mediarealm.com.au/articles/wordpress-timezones-strtotime-date-functions/
-    function pwgc_strtotime($str, $gmt = false) {
-      // This function behaves a bit like PHP's StrToTime() function, but taking into account the Wordpress site's timezone
-      // CAUTION: It will throw an exception when it receives invalid input - please catch it accordingly
-      // From https://mediarealm.com.au/
-
-      $tz_string = get_option('timezone_string');
-      $tz_offset = get_option('gmt_offset', 0);
-
-      if (function_exists('wp_timezone_string')) {
-        $timezone = wp_timezone_string();
-        if( !empty($timeZoneString)){
-            $timezone = $timeZoneString;
-        }else{
-            $timezone = 'UTC';
+if ( !function_exists( 'pwgc_date' ) ) {
+    function pwgc_date( $date_string, $gmt = false ) {
+        if ( $gmt ) {
+            $time = strtotime( get_date_from_gmt( $date_string ) );
+        } else {
+            $time = strtotime( $date_string );
         }
-      } else {
-          if (!empty($tz_string)) {
-              // If site timezone option string exists, use it
-              $timezone = $tz_string;
 
-          } elseif ($tz_offset == 0) {
-              // get UTC offset, if it isn’t set then return UTC
-              $timezone = 'UTC';
-
-          } else {
-              $timezone = $tz_offset;
-
-              if(substr($tz_offset, 0, 1) != "-" && substr($tz_offset, 0, 1) != "+" && substr($tz_offset, 0, 1) != "U") {
-                  $timezone = "+" . $tz_offset;
-              }
-          }
-      }
-
-      $datetime = new DateTime($str);
-      try {
-          $datetime->setTimezone(new DateTimeZone($timezone));
-      } catch ( Exception $ex ) {
-          // set timezone to UTC in case current timezone throws an exception
-          $timezone = 'UTC';
-          $datetime->setTimezone(new DateTimeZone($timezone));
-      }
-
-      if ( $gmt ) {
-          return ( $datetime->getTimestamp() + $datetime->getOffset() );
-      } else {
-          return $datetime->format('U');
-      }
+        return date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $time );
     }
 }

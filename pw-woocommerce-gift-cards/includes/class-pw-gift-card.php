@@ -41,6 +41,9 @@ class PW_Gift_Card {
     public function get_create_date() { return $this->create_date; }
     private $create_date;
 
+    public function get_create_date_gmt() { return $this->create_date_gmt; }
+    private $create_date_gmt;
+
     public function get_expiration_date() { return $this->expiration_date; }
     public function set_expiration_date( $expiration_date ) { return; }
     private $expiration_date;
@@ -77,7 +80,7 @@ class PW_Gift_Card {
     function get_gift_card( $number ) {
         global $wpdb;
 
-        $result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `{$wpdb->pimwick_gift_card}` WHERE `number` = %s", $number ) );
+        $result = $wpdb->get_row( $wpdb->prepare( "SELECT *, CONVERT_TZ( create_date, @@session.time_zone, '+00:00' ) AS create_date_gmt FROM `{$wpdb->pimwick_gift_card}` WHERE `number` = %s", $number ) );
         if ( $result !== null ) {
             $this->load_gift_card_data( $result );
             return true;
@@ -92,6 +95,7 @@ class PW_Gift_Card {
             $this->number                   = $row->number;
             $this->active                   = $row->active;
             $this->create_date              = $row->create_date;
+            $this->create_date_gmt          = $row->create_date_gmt;
             $this->expiration_date          = $row->expiration_date;
 
             if ( property_exists( $row, 'balance' ) ) {
@@ -126,9 +130,9 @@ class PW_Gift_Card {
     }
 
     public function get_create_date_html() {
-        $create_date = $this->get_create_date();
-        if ( !empty( $create_date ) ) {
-            $html = date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $create_date ) );
+        $create_date_gmt = $this->get_create_date_gmt();
+        if ( !empty( $create_date_gmt ) ) {
+            $html = pwgc_date( $create_date_gmt, true );
         } else {
             $html = __( 'None', 'pw-woocommerce-gift-cards' );
         }

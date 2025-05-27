@@ -466,6 +466,7 @@ final class PW_Gift_Cards_Admin {
             $sql = $wpdb->prepare( "
                 SELECT
                     gift_card.*,
+                    CONVERT_TZ( create_date, @@session.time_zone, '+00:00' ) AS create_date_gmt,
                     (SELECT SUM(amount) FROM {$wpdb->pimwick_gift_card_activity} AS a WHERE a.pimwick_gift_card_id = gift_card.pimwick_gift_card_id) AS balance
                 FROM
                     `{$wpdb->pimwick_gift_card}` AS gift_card
@@ -484,6 +485,7 @@ final class PW_Gift_Cards_Admin {
             $sql = $wpdb->prepare( "
                 SELECT
                     gift_card.*,
+                    CONVERT_TZ( create_date, @@session.time_zone, '+00:00' ) AS create_date_gmt,
                     (SELECT SUM(amount) FROM {$wpdb->pimwick_gift_card_activity} AS a WHERE a.pimwick_gift_card_id = gift_card.pimwick_gift_card_id) AS balance
                 FROM
                     `{$wpdb->pimwick_gift_card}` AS gift_card

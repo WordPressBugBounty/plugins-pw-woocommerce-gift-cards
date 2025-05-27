@@ -5,7 +5,7 @@ Tags: woocommerce, gift cards, gift certificates, vouchers, store credit
 Requires at least: 4.5
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 2.13
+Stable tag: 2.14
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,6 +94,9 @@ The following currency switcher plugins are supported:
 
 == Changelog ==
 
+= 2.14 =
+* Fixed a timezone conversion issue in the gift card admin area.
+
 = 2.13 =
 * Added support for VillaTheme (CURCY) fixed pricing settings.
 
@@ -121,15 +124,12 @@ The following currency switcher plugins are supported:
 = 2.5 =
 * Changed hook for loading translations file to avoid warning in WordPress 6.7.
 
-= 2.4 =
-* Added compatibility declaration for the WooCommerce Price Based on Country plugin. Updated WooCommerce minimum version requirement in readme. Compatibility with WordPress 6.7 and WooCommerce 9.4.
-
 = Previous versions =
 * See changelog.txt
 
 == Upgrade Notice ==
 
-= 2.13 =
-* Added support for VillaTheme (CURCY) fixed pricing settings.
+= 2.14 =
+* Fixed a timezone conversion issue in the gift card admin area.
 
 

@@ -36,7 +36,7 @@ defined( 'ABSPATH' ) or exit;
             ?>
             <tr>
                 <td>
-                    <?php echo date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), pwgc_strtotime( $activity->activity_date_gmt, true ) ); ?>
+                    <?php echo pwgc_date( $activity->activity_date_gmt, true ); ?>
                 </td>
                 <td>
                     <?php echo esc_html( ucwords( $activity->action ) ); ?>
