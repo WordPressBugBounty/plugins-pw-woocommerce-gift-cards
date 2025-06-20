@@ -5,7 +5,7 @@ Tags: woocommerce, gift cards, gift certificates, vouchers, store credit
 Requires at least: 4.5
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 2.14
+Stable tag: 2.15
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,6 +94,9 @@ The following currency switcher plugins are supported:
 
 == Changelog ==
 
+= 2.15 =
+* Added additional parameter (product id) for pw_gift_cards_random_card_number filter.
+
 = 2.14 =
 * Fixed a timezone conversion issue in the gift card admin area.
 
@@ -121,15 +124,12 @@ The following currency switcher plugins are supported:
 = 2.6 =
 * Added Polish translation.
 
-= 2.5 =
-* Changed hook for loading translations file to avoid warning in WordPress 6.7.
-
 = Previous versions =
 * See changelog.txt
 
 == Upgrade Notice ==
 
-= 2.14 =
-* Fixed a timezone conversion issue in the gift card admin area.
+= 2.15 =
+* Added additional parameter (product id) for pw_gift_cards_random_card_number filter.
 
 

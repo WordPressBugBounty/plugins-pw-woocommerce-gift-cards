@@ -1,3 +1,6 @@
+= 2.15 =
+* Added additional parameter (product id) for pw_gift_cards_random_card_number filter.
+
 = 2.14 =
 * Fixed a timezone conversion issue in the gift card admin area.
 

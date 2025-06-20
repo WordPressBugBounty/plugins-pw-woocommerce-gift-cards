@@ -337,7 +337,7 @@ class PW_Gift_Card {
         return __( 'Unknown error in add_card method.', 'pw-woocommerce-gift-cards' );
     }
 
-    public static function create_card( $note = '' ) {
+    public static function create_card( $note = '', $product_id = 0 ) {
         // Failsafe. If we haven't generated a number after this many tries, throw an error.
         $attempts = 0;
         $max_attempts = 100;
@@ -346,7 +346,7 @@ class PW_Gift_Card {
         do {
             $attempts++;
 
-            $number = self::random_card_number();
+            $number = self::random_card_number( $product_id );
             $gift_card = PW_Gift_Card::add_card( $number, $note );
 
         } while ( !( $gift_card instanceof self ) && $attempts < $max_attempts );
@@ -390,7 +390,7 @@ class PW_Gift_Card {
         do_action( 'pwgc_activity_' . $action, $this, $amount, $note, $reference_activity_id );
     }
 
-    public static function random_card_number() {
+    public static function random_card_number( $product_id = 0 ) {
 
         $card_number = '';
 
@@ -405,7 +405,11 @@ class PW_Gift_Card {
             }
         }
 
-        return apply_filters( 'pw_gift_cards_random_card_number', $card_number );
+        return apply_filters(
+            'pw_gift_cards_random_card_number',
+            $card_number,
+            absint( $product_id )
+        );
     }
 }
 

@@ -335,7 +335,7 @@ final class PW_Gift_Cards_Purchasing {
             // Create any new/missing gift cards.
             for ( $x = count( $gift_card_numbers ); $x < $order_item['quantity']; $x++ ) {
 
-                $gift_card = PW_Gift_Card::create_card( $create_note );
+                $gift_card = PW_Gift_Card::create_card( $create_note, $product_id );
 
                 if ( ! is_a( $gift_card, 'PW_Gift_Card' ) ) {
                     if ( is_string( $gift_card ) ) {
