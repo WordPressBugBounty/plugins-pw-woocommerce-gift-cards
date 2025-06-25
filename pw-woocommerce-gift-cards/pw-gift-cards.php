@@ -3,7 +3,7 @@
  * Plugin Name: PW WooCommerce Gift Cards
  * Plugin URI: https://www.pimwick.com/gift-cards/
  * Description: Sell gift cards in your WooCommerce store.
- * Version: 2.15
+ * Version: 2.16
  * Author: Pimwick, LLC
  * Author URI: https://www.pimwick.com
  * Text Domain: pw-woocommerce-gift-cards
@@ -108,7 +108,7 @@ add_action( 'plugins_loaded', function() {
         return;
     }
 
-                                                                                                                                define( 'PWGC_VERSION', '2.15' );
+                                                                                                                                                                                                                                                                define( 'PWGC_VERSION', '2.16' );
 
     load_plugin_textdomain( 'pw-woocommerce-gift-cards', false, basename( dirname( __FILE__ ) ) . '/languages' );
 
@@ -624,6 +624,12 @@ add_action( 'plugins_loaded', function() {
                 }
             }
 
+            // YayCurrency Pro for WooCommerce by YayCommerce
+            if ( class_exists( 'Yay_Currency\Helpers\YayCurrencyHelper' ) ) {
+                $apply_currency = Yay_Currency\Helpers\YayCurrencyHelper::detect_current_currency();
+                $amount = Yay_Currency\Helpers\YayCurrencyHelper::calculate_price_by_currency( $amount, false, $apply_currency );
+            }
+
             return $amount;
         }
 
@@ -726,6 +732,15 @@ add_action( 'plugins_loaded', function() {
                 }
             }
 
+            // YayCurrency Pro for WooCommerce by YayCommerce
+            if ( class_exists( 'Yay_Currency\Helpers\YayCurrencyHelper' && class_exists( 'Yay_Currency\Helpers\Helper' ) ) ) {
+                $default_currency_code = Yay_Currency\Helpers\Helper::default_currency_code();
+                $apply_currency = Yay_Currency\Helpers\YayCurrencyHelper::detect_current_currency();
+                if ( $default_currency_code !== $apply_currency ) {
+                    $amount = Yay_Currency\Helpers\YayCurrencyHelper::calculate_price_by_currency( $amount, false, $default_currency_code );
+                }
+            }
+
             return $amount;
         }
 
@@ -822,6 +837,15 @@ add_action( 'plugins_loaded', function() {
                     remove_filter( 'alg_wc_currency_switcher_correction', array( $this, 'alg_wc_currency_switcher_correction' ), 10, 2 );
 
                     return $amount;
+                }
+            }
+
+            // YayCurrency Pro for WooCommerce by YayCommerce
+            if ( class_exists( 'Yay_Currency\Helpers\YayCurrencyHelper' && class_exists( 'Yay_Currency\Helpers\Helper' ) ) ) {
+                $default_currency_code = Yay_Currency\Helpers\Helper::default_currency_code();
+                $apply_currency = Yay_Currency\Helpers\YayCurrencyHelper::detect_current_currency();
+                if ( $default_currency_code !== $apply_currency ) {
+                    $amount = Yay_Currency\Helpers\YayCurrencyHelper::calculate_price_by_currency( $amount, false, $apply_currency );
                 }
             }
 
