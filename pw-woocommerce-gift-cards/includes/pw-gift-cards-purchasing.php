@@ -199,7 +199,9 @@ final class PW_Gift_Cards_Purchasing {
                         }
                     }
 
-                    $price = apply_filters( 'pwgc_to_default_currency', $price );
+                    if ( 'no' === get_option( 'pwgc_before_add_to_cart_currency_conversion_fix', 'no' ) ) {
+                        $price = apply_filters( 'pwgc_to_default_currency', $price );
+                    }
 
                     $order_item->add_meta_data( $key, $price );
                 } else if ( isset( $cart_item[ $key ] ) ) {

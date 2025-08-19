@@ -72,6 +72,13 @@ final class PW_Gift_Cards_Admin {
                 'type'    => 'checkbox',
             ),
             array(
+                'title'   => __( 'Apply fix for currency conversion', 'pw-woocommerce-gift-cards' ),
+                'desc'    => __( 'If the gift card amount is incorrect due to conversion running twice after purchase, try checking this box. This can occur if default currency is used in cart with a multi currency plugin.', 'pw-woocommerce-gift-cards' ),
+                'id'      => 'pwgc_before_add_to_cart_currency_conversion_fix',
+                'default' => 'no',
+                'type'    => 'checkbox',
+            ),
+            array(
                 'title'   => __( 'Format Prices', 'pw-woocommerce-gift-cards' ),
                 'desc'    => __( 'For fixed gift card amounts, format the price with the system currency symbol. This is enabled by default. If you are having trouble with currency switchers, disable this setting. Note: You must remove and re-add your fixed gift card amounts if you change this setting.', 'pw-woocommerce-gift-cards' ),
                 'id'      => 'pwgc_format_prices',
