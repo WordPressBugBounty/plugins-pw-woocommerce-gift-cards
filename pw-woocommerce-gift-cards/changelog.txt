@@ -1,3 +1,6 @@
+= 2.19 =
+* Small bug fix to version numbering. Bug fix for order total rounding issue.
+
 = 2.18 =
 * Bug fix for currency conversion issue (double conversion).
 

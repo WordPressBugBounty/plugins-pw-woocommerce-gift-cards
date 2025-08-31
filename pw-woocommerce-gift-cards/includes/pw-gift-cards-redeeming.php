@@ -216,28 +216,30 @@ final class PW_Gift_Cards_Redeeming {
 
     function calculate_order_total( $order ) {
 
+        $wc_price_decimals = wc_get_price_decimals();
+
         $cart_total = 0;
         $fees_total = 0;
 
         foreach ( $order->get_items() as $item ) {
-            $cart_total += $item->get_total();
+            $cart_total += round( $item->get_total(), $wc_price_decimals );
         }
 
         foreach ( $order->get_fees() as $item ) {
-            $fee_total = $item->get_total();
+            $fee_total = round( $item->get_total(), $wc_price_decimals );
 
             if ( 0 > $fee_total ) {
-                $max_discount = round( $cart_total + $fees_total + $shipping_total, wc_get_price_decimals() ) * -1;
+                $max_discount = round( $cart_total + $fees_total, $wc_price_decimals ) * -1;
 
                 if ( $fee_total < $max_discount ) {
                     $item->set_total( $max_discount );
                 }
             }
 
-            $fees_total += $item->get_total();
+            $fees_total += round( $item->get_total(), $wc_price_decimals );
         }
 
-        $new_total = round( $cart_total + $fees_total + $order->get_shipping_total() + $order->get_cart_tax() + $order->get_shipping_tax(), wc_get_price_decimals() );
+        $new_total = round( $cart_total + $fees_total + $order->get_shipping_total() + $order->get_cart_tax() + $order->get_shipping_tax(), $wc_price_decimals );
 
         return $new_total;
     }
