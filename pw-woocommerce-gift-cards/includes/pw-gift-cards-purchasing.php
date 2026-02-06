@@ -325,6 +325,14 @@ final class PW_Gift_Cards_Purchasing {
             }
             $item_note = $note . ", order_item_id: $order_item_id";
 
+            // Use wc_add_order_item_meta with $unique=true as an atomic check-and-set operation.
+            // If the meta key already exists, this will return false and we skip to prevent duplicates.
+            $meta_id = wc_add_order_item_meta( $order_item_id, PWGC_GIFT_CARDS_CREATED_META_KEY, 'yes', true );
+            if ( false === $meta_id ) {
+                // Gift cards have already been created for this order item, skip to prevent duplicates.
+                continue;
+            }
+
             // Create a gift card for each quantity ordered.
             $gift_card_numbers = (array) wc_get_order_item_meta( $order_item_id, PWGC_GIFT_CARD_NUMBER_META_KEY, false );
 
@@ -334,8 +342,17 @@ final class PW_Gift_Cards_Purchasing {
                 $gift_card->reactivate( $item_note );
             }
 
+            $existing_count = count( $gift_card_numbers );
+            $required_quantity = absint( $order_item['quantity'] );
+
+            // If we already have the required number of gift cards, we're done.
+            // This handles cases where cards were created but the meta key wasn't set (e.g., from a previous version).
+            if ( $existing_count >= $required_quantity ) {
+                continue;
+            }
+
             // Create any new/missing gift cards.
-            for ( $x = count( $gift_card_numbers ); $x < $order_item['quantity']; $x++ ) {
+            for ( $x = $existing_count; $x < $required_quantity; $x++ ) {
 
                 $gift_card = PW_Gift_Card::create_card( $create_note, $product_id );
 
@@ -368,6 +385,9 @@ final class PW_Gift_Cards_Purchasing {
                 $gift_card = new PW_Gift_Card( $gift_card_number );
                 $gift_card->deactivate( $item_note );
             }
+
+            // Clear the creation meta key so gift cards can be reactivated if the order is restored.
+            wc_delete_order_item_meta( $order_item_id, PWGC_GIFT_CARDS_CREATED_META_KEY );
         }
     }
 
@@ -450,6 +470,14 @@ final class PW_Gift_Cards_Purchasing {
                         unset( $formatted_meta[ $id ] );
                     }
                 }
+            }
+        }
+
+        foreach ( $formatted_meta as $id => $meta ) {
+            // Hide internal tracking meta field from admin display.
+            if ( $meta->key == PWGC_GIFT_CARDS_CREATED_META_KEY ) {
+                unset( $formatted_meta[ $id ] );
+                continue;
             }
         }
 

@@ -3,13 +3,13 @@
  * Plugin Name: PW WooCommerce Gift Cards
  * Plugin URI: https://www.pimwick.com/gift-cards/
  * Description: Sell gift cards in your WooCommerce store.
- * Version: 2.19
+ * Version: 2.34
  * Author: Pimwick, LLC
  * Author URI: https://www.pimwick.com
  * Text Domain: pw-woocommerce-gift-cards
  * Domain Path: /languages
  * WC requires at least: 4.0
- * WC tested up to: 10.1
+ * WC tested up to: 10.4
  * Requires Plugins: woocommerce
 */
 
@@ -55,6 +55,7 @@ pimwick_define( 'PWGC_RANDOM_CARD_NUMBER_SECTION_LENGTH', '4' );
 pimwick_define( 'PWGC_RANDOM_CARD_NUMBER_CHARSET', 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789' );
 pimwick_define( 'PWGC_DENOMINATION_ATTRIBUTE_SLUG', 'gift-card-amount' );
 pimwick_define( 'PWGC_GIFT_CARD_NUMBER_META_KEY', 'pw_gift_card_number' );
+pimwick_define( 'PWGC_GIFT_CARDS_CREATED_META_KEY', '_pw_gift_cards_created' );
 pimwick_define( 'PWGC_AMOUNT_META_KEY', 'pw_gift_card_amount' );
 pimwick_define( 'PWGC_TO_META_KEY', 'pw_gift_card_to' );
 pimwick_define( 'PWGC_FROM_META_KEY', 'pw_gift_card_from' );
@@ -99,6 +100,7 @@ add_action( 'before_woocommerce_init', function() {
     // WooCommerce High Performance Order Storage (HPOS) compatibility declaration.
     if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
         \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+        \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', __FILE__, true );
     }
 } );
 
@@ -108,7 +110,7 @@ add_action( 'plugins_loaded', function() {
         return;
     }
 
-define( 'PWGC_VERSION', '2.19' );
+define( 'PWGC_VERSION', '2.34' );
 
     load_plugin_textdomain( 'pw-woocommerce-gift-cards', false, basename( dirname( __FILE__ ) ) . '/languages' );
 
@@ -129,6 +131,7 @@ define( 'PWGC_VERSION', '2.19' );
             require_once( PWGC_PLUGIN_ROOT . 'includes/class-pw-gift-card-activity.php' );
             require_once( PWGC_PLUGIN_ROOT . 'includes/class-pw-gift-card-item-data.php' );
             require_once( PWGC_PLUGIN_ROOT . 'includes/pw-gift-cards-email-manager.php' );
+            require_once( PWGC_PLUGIN_ROOT . 'includes/blocks/class-pw-gift-cards-blocks.php' );
 
             add_action( 'plugins_loaded', array( $this, 'plugins_loaded' ) );
             add_action( 'woocommerce_init', array( $this, 'woocommerce_init' ) );

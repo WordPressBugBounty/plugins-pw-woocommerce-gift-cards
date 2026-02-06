@@ -98,6 +98,8 @@ final class PW_Gift_Cards_Redeeming {
         add_filter( 'alg_wc_oma_amount_cart_total', array( $this, 'alg_wc_oma_amount_cart_total' ), 10, 2 );
         add_filter( 'alg_wc_order_minimum_amount_message', array( $this, 'alg_wc_order_minimum_amount_message' ), 10, 3 );
 
+        add_filter( 'woocommerce_order_needs_payment', array( $this, 'woocommerce_order_needs_payment' ), 10, 2 );
+
         add_action( 'yith_pdf_invoice_before_total', array( $this, 'yith_pdf_invoice_before_total' ) );
     }
 
@@ -286,7 +288,7 @@ final class PW_Gift_Cards_Redeeming {
         $this->debit_gift_cards( $order_id, $order, "order_id: $order_id pre_payment_complete" );
     }
 
-    function woocommerce_checkout_update_order_meta( $order_id, $data ) {
+    function woocommerce_checkout_update_order_meta( $order_id, $data = array() ) {
         $order = wc_get_order( $order_id );
         $this->debit_gift_cards( $order_id, $order, "order_id: $order_id checkout_update_order_meta" );
     }
@@ -326,27 +328,94 @@ final class PW_Gift_Cards_Redeeming {
             return;
         }
 
+        // Prevent debiting when the order is in a failed status. This can happen when:
+        // 1. Payment fails and order status changes to "failed" (which triggers credit_gift_cards)
+        // 2. Payment gateway retries the payment, which may trigger debit_gift_cards again
+        // 3. Without this check, the gift card would be debited even though the order is still failed
         // WooCommerce Authorize.Net Gateway will sometimes trigger the "processing" routine twice, as a duplicate transaction.
-        if ( defined( 'WC_AUTHNET_VERSION' ) ) {
-            if ( $order->has_status( 'failed' ) ) {
-                // This prevents the gift card from being debited when the transaction is in a Failed status.
-                return;
-            }
+        if ( $order->has_status( 'failed' ) ) {
+            // This prevents the gift card from being debited when the transaction is in a Failed status.
+            return;
         }
 
         foreach( $order->get_items( 'pw_gift_card' ) as $order_item_id => $line ) {
             $gift_card = new PW_Gift_Card( $line->get_card_number() );
             if ( $gift_card->get_id() ) {
+                // Fast-path check: order item meta (optimization)
                 if ( !$line->meta_exists( '_pw_gift_card_debited' ) ) {
-                    if ( $line->get_amount() != 0 ) {
-                        $gift_card->debit( ( $line->get_amount() * -1 ), "$note, order_item_id: $order_item_id" );
-                    }
+                    // Database-level idempotency check: verify no duplicate debit exists
+                    // This prevents race conditions where multiple hooks fire simultaneously
+                    if ( !$this->has_redemption_been_processed( $gift_card->get_id(), $order_id, $order_item_id, $line->get_amount() ) ) {
+                        $debit_amount = apply_filters( 'pwgc_debit_amount', ( $line->get_amount() * -1 ), $gift_card, $order_item_id, $line, $order );
 
-                    $line->add_meta_data( '_pw_gift_card_debited', true );
-                    $line->save();
+                        if ( $debit_amount != 0 ) {
+                            // Build the note with order_item_id for idempotency checking
+                            $idempotency_note = $note;
+                            if ( absint( $order_item_id ) > 0 ) {
+                                $idempotency_note .= ", order_item_id: $order_item_id";
+                            }
+
+                            // Perform the debit operation
+                            $gift_card->debit( $debit_amount, $idempotency_note );
+
+                            // Mark as debited in order item meta (after successful debit)
+                            $line->add_meta_data( '_pw_gift_card_debited', true );
+                            $line->save();
+                        }
+                    } else {
+                        // Redemption already processed (race condition handled), update meta for consistency
+                        $line->add_meta_data( '_pw_gift_card_debited', true );
+                        $line->save();
+                    }
                 }
             }
         }
+    }
+
+    /**
+     * Check if a redemption has already been processed for this order/item combination.
+     * This provides database-level idempotency checking to prevent duplicate debits.
+     *
+     * @param int $gift_card_id The gift card ID
+     * @param int $order_id The order ID
+     * @param int $order_item_id The order item ID
+     * @param float $amount The redemption amount (for additional verification)
+     * @return bool True if redemption already exists, false otherwise
+     */
+    private function has_redemption_been_processed( $gift_card_id, $order_id, $order_item_id, $amount ) {
+        global $wpdb;
+
+        // Build search patterns for the note field
+        // Notes typically look like: "order_id: 123, order_item_id: 456" or variations
+        $order_id_pattern = "order_id: $order_id";
+        $order_item_pattern = "order_item_id: $order_item_id";
+
+        // Amount with tolerance for floating point comparisons (convert to negative for debit)
+        $debit_amount = floatval( $amount ) * -1;
+        $amount_tolerance = 0.01;
+
+        // Check if a debit transaction already exists for this combination
+        // This query will find any existing debit for this order/item, regardless of which hook triggered it
+        $existing = $wpdb->get_var( $wpdb->prepare( "
+            SELECT COUNT(*)
+            FROM {$wpdb->pimwick_gift_card_activity}
+            WHERE pimwick_gift_card_id = %d
+            AND action = 'transaction'
+            AND amount IS NOT NULL
+            AND amount < 0
+            AND note LIKE %s
+            AND note LIKE %s
+            AND ABS(amount - %f) < %f
+            LIMIT 1
+        ",
+            $gift_card_id,
+            '%' . $wpdb->esc_like( $order_id_pattern ) . '%',
+            '%' . $wpdb->esc_like( $order_item_pattern ) . '%',
+            $debit_amount,
+            $amount_tolerance
+        ) );
+
+        return ( $existing > 0 );
     }
 
     function credit_gift_cards( $order_id, $order, $note ) {
@@ -358,8 +427,14 @@ final class PW_Gift_Cards_Redeeming {
             $gift_card = new PW_Gift_Card( $line->get_card_number() );
             if ( $gift_card->get_id() ) {
                 if ( $line->meta_exists( '_pw_gift_card_debited' ) ) {
-                    if ( $line->get_amount() != 0 ) {
-                        $gift_card->credit( $line->get_amount(), "$note, order_item_id: $order_item_id" );
+                    $credit_amount = apply_filters( 'pwgc_credit_amount', $line->get_amount(), $gift_card, $order_item_id, $line, $order );
+
+                    if ( $credit_amount ) {
+                        if ( absint( $order_item_id ) > 0 ) {
+                            $note .= ", order_item_id: $order_item_id";
+                        }
+
+                        $gift_card->credit( $credit_amount, $note );
                     }
 
                     $line->delete_meta_data( '_pw_gift_card_debited' );
@@ -414,7 +489,7 @@ final class PW_Gift_Cards_Redeeming {
         return $total_rows;
     }
 
-    function woocommerce_checkout_create_order( $order, $data ) {
+    function woocommerce_checkout_create_order( $order, $data = array() ) {
         $session_data = (array) WC()->session->get( PWGC_SESSION_KEY );
         if ( !isset( $session_data['gift_cards'] ) ) {
             return;
@@ -726,6 +801,52 @@ final class PW_Gift_Cards_Redeeming {
     function fzpcr_fix() {
         global $woocommerce;
         $woocommerce->cart->calculate_totals();
+    }
+
+    /**
+     * Tell WooCommerce that payment is not needed for orders when gift cards cover the full balance.
+     * This prevents the "No payment method provided." error when the order total is zero.
+     */
+    function woocommerce_order_needs_payment( $needs_payment, $order ) {
+        if ( ! is_a( $order, 'WC_Order' ) ) {
+            return $needs_payment;
+        }
+
+        $gift_card_total = 0;
+
+        // First, check if gift cards are already on the order.
+        $gift_card_items = $order->get_items( 'pw_gift_card' );
+        if ( ! empty( $gift_card_items ) ) {
+            foreach( $gift_card_items as $line ) {
+                $gift_card_total += apply_filters( 'pwgc_to_order_currency', $line->get_amount(), $order );
+            }
+        } else {
+            // Gift cards might not be on the order yet, check the session.
+            if ( WC()->session ) {
+                $session_data = (array) WC()->session->get( PWGC_SESSION_KEY );
+                if ( isset( $session_data['gift_cards'] ) && ! empty( $session_data['gift_cards'] ) ) {
+                    foreach ( $session_data['gift_cards'] as $card_number => $amount ) {
+                        $gift_card_total += $amount;
+                    }
+                }
+            }
+        }
+
+        // If we have gift cards, calculate the effective total.
+        if ( $gift_card_total > 0 ) {
+            // Calculate the order total before gift cards (in case it hasn't been calculated yet).
+            $order_total = $this->calculate_order_total( $order );
+
+            // Calculate the effective total after gift cards.
+            $effective_total = $order_total - $gift_card_total;
+
+            // If the effective total is zero or less, payment is not needed.
+            if ( $effective_total <= 0 ) {
+                return false;
+            }
+        }
+
+        return $needs_payment;
     }
 
     function yith_pdf_invoice_before_total( $current_order ) {

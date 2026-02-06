@@ -87,7 +87,7 @@ final class PW_Gift_Cards_Admin {
             ),
             array(
                 'title'    => __( 'Redeem Location - Cart', 'pw-woocommerce-gift-cards' ),
-                'desc'     => __( 'Specifies where the "Apply Gift Card" box appears on the Cart page.', 'pw-woocommerce-gift-cards' ),
+                'desc'     => __( 'Specifies where the "Apply Gift Card" box appears on the Cart page.', 'pw-woocommerce-gift-cards' ) . ' ' . __( '(Classic Cart only)', 'pw-woocommerce-gift-cards' ),
                 'id'       => 'pwgc_redeem_cart_location',
                 'default'  => 'proceed_to_checkout',
                 'type'     => 'select',
@@ -102,7 +102,7 @@ final class PW_Gift_Cards_Admin {
             ),
             array(
                 'title'    => __( 'Redeem Location - Checkout', 'pw-woocommerce-gift-cards' ),
-                'desc'     => __( 'Specifies where the "Apply Gift Card" box appears on the Checkout page.', 'pw-woocommerce-gift-cards' ),
+                'desc'     => __( 'Specifies where the "Apply Gift Card" box appears on the Checkout page.', 'pw-woocommerce-gift-cards' ) . ' ' . __( '(Classic Checkout only)', 'pw-woocommerce-gift-cards' ),
                 'id'       => 'pwgc_redeem_checkout_location',
                 'default'  => 'review_order_before_submit',
                 'type'     => 'select',
@@ -114,6 +114,13 @@ final class PW_Gift_Cards_Admin {
                     'before_checkout_form' => __( 'Below the "Apply Coupon" area.', 'pw-woocommerce-gift-cards' ),
                     'none' => __( 'Do not display gift card field.', 'pw-woocommerce-gift-cards' ),
                 ),
+            ),
+            array(
+                'title'   => __( 'Hide the "Apply Gift Card" form on Blocks', 'pw-woocommerce-gift-cards' ),
+                'desc'    => __( 'Hide the Apply Gift Card form on the Cart and Checkout Blocks. Default: unchecked.', 'pw-woocommerce-gift-cards' ),
+                'id'      => 'pwgc_blocks_hide_redeem_form',
+                'default' => 'no',
+                'type'    => 'checkbox',
             ),
             array(
                 'title'    => __( 'Hide Pimwick Plugins Menu', 'pw-woocommerce-gift-cards' ),

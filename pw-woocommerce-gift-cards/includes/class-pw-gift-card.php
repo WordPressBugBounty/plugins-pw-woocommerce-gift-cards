@@ -244,19 +244,41 @@ class PW_Gift_Card {
     }
 
     public function adjust_balance( $amount, $note = '' ) {
+        global $wpdb;
+
         $amount = floatval( $amount );
 
         if ( !$this->active ) {
             wp_die( __( 'Unable to adjust balance, card is not active.', 'pw-woocommerce-gift-cards' ) );
         }
 
-        if ( ( $this->get_balance() + $amount ) < 0 ) {
-            $amount = $this->get_balance() * -1;
+        // Serialize debits per gift card so concurrent orders cannot redeem more than balance.
+        $lock_key = null;
+        if ( $amount < 0 ) {
+            $lock_key = 'pwgc_debit_' . $this->get_id();
+            $acquired = $wpdb->get_var( $wpdb->prepare( "SELECT GET_LOCK(%s, 60)", $lock_key ) );
+            if ( $acquired != '1' ) {
+                wp_die( __( 'Unable to process gift card debit; please try again.', 'pw-woocommerce-gift-cards' ) );
+            }
         }
 
-        $this->balance_cache = false;
+        try {
+            // After acquiring the lock, read balance fresh so we see the other process's debit (avoid stale cache).
+            if ( $lock_key !== null ) {
+                $this->balance_cache = false;
+            }
+            if ( ( $this->get_balance() + $amount ) < 0 ) {
+                $amount = $this->get_balance() * -1;
+            }
 
-        $this->log_activity( 'transaction', $amount, $note );
+            $this->balance_cache = false;
+
+            $this->log_activity( 'transaction', $amount, $note );
+        } finally {
+            if ( $lock_key !== null ) {
+                $wpdb->query( $wpdb->prepare( "SELECT RELEASE_LOCK(%s)", $lock_key ) );
+            }
+        }
     }
 
     public function deactivate( $note = '' ) {

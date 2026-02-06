@@ -297,6 +297,9 @@ function pwgc_woocommerce_variation_option_name( $name, $option = null, $attribu
     }
 
     if ( is_a( $product, 'WC_Product_PW_Gift_Card' ) && 'yes' === get_option( 'pwgc_format_prices', 'yes' ) && ! class_exists( 'Woo_Variation_Swatches' ) ) {
+        if ( $attribute_name !== 'attribute_' . PWGC_DENOMINATION_ATTRIBUTE_SLUG ) {
+            return $name;
+        }
 
         if (
             // Price Based on Country for WooCommerce by Oscar Gare

@@ -1,3 +1,48 @@
+= 2.34 =
+* Integration with payment gateways and bug fixes.
+
+= 2.33 =
+* Integration for Payment Plugins for PayPal WooCommerce.
+
+= 2.32 =
+* Updates for gift card redeeming process.
+
+= 2.31 =
+* Prevent gift card debit when order is in Failed status.
+
+= 2.30 =
+* Added additional logic for gift card creation.
+
+= 2.29 =
+* Bug fix for null session.
+
+= 2.28 =
+* Update for "No payment method provided." error during checkout.
+
+= 2.27 =
+* Fixed an issue with translating the gift card sections of the WooCommerce Cart and Checkout Blocks.
+
+= 2.26 =
+* Confirmed compatibility with WooCommerce 10.4.
+
+= 2.25 =
+* Updated translations. Confirmed compatibility with WordPress 6.9
+
+= 2.24 =
+* Updated readme to indicate compatibility with WooCommerce Blocks and HPOS.
+
+= 2.23 =
+* Added a new setting to allow hiding the Apply Gift Card form on Blocks Cart and Checkout pages.
+
+= 2.22 =
+* WooCommerce Blocks support added for Cart and Checkout. Confirmed compatibility with WooCommerce 10.3
+
+= 2.21 =
+* Bug fix for attribute drop down display text.
+
+= 2.20 =
+* Confirmed compatibility with WooCommerce 10.2
+
 = 2.19 =
 * Small bug fix to version numbering. Bug fix for order total rounding issue.
 

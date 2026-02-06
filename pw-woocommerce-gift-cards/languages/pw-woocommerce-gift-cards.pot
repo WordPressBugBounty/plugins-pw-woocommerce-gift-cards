@@ -1,15 +1,15 @@
-# Copyright (C) 2024 Pimwick, LLC
+# Copyright (C) 2025 Pimwick, LLC
 # This file is distributed under the same license as the PW WooCommerce Gift Cards plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: PW WooCommerce Gift Cards 2.5\n"
+"Project-Id-Version: PW WooCommerce Gift Cards 2.24\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pw-gift-cards\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-11-12T16:20:54+00:00\n"
+"POT-Creation-Date: 2025-12-09T19:46:20+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: pw-woocommerce-gift-cards\n"
@@ -36,14 +36,14 @@ msgstr ""
 
 #. translators: %s is PW Gift Cards.
 #: admin/pw-gift-cards-admin.php:34
-#: admin/pw-gift-cards-admin.php:114
-#: admin/pw-gift-cards-admin.php:192
-#: admin/pw-gift-cards-admin.php:203
-#: admin/pw-gift-cards-admin.php:215
-#: admin/pw-gift-cards-admin.php:216
-#: admin/pw-gift-cards-admin.php:225
-#: admin/pw-gift-cards-admin.php:226
-#: admin/pw-gift-cards-admin.php:376
+#: admin/pw-gift-cards-admin.php:128
+#: admin/pw-gift-cards-admin.php:206
+#: admin/pw-gift-cards-admin.php:217
+#: admin/pw-gift-cards-admin.php:229
+#: admin/pw-gift-cards-admin.php:230
+#: admin/pw-gift-cards-admin.php:239
+#: admin/pw-gift-cards-admin.php:240
+#: admin/pw-gift-cards-admin.php:390
 msgid "PW Gift Cards"
 msgstr ""
 
@@ -88,158 +88,182 @@ msgid "If you do not see the To / From / Message fields on your gift card produc
 msgstr ""
 
 #: admin/pw-gift-cards-admin.php:75
-msgid "Format Prices"
+msgid "Apply fix for currency conversion"
 msgstr ""
 
 #: admin/pw-gift-cards-admin.php:76
-msgid "For fixed gift card amounts, format the price with the system currency symbol. This is enabled by default. If you are having trouble with currency switchers, disable this setting. Note: You must remove and re-add your fixed gift card amounts if you change this setting."
+msgid "If the gift card amount is incorrect due to conversion running twice after purchase, try checking this box. This can occur if default currency is used in cart with a multi currency plugin."
 msgstr ""
 
 #: admin/pw-gift-cards-admin.php:82
-msgid "Redeem Location - Cart"
+msgid "Format Prices"
 msgstr ""
 
 #: admin/pw-gift-cards-admin.php:83
+msgid "For fixed gift card amounts, format the price with the system currency symbol. This is enabled by default. If you are having trouble with currency switchers, disable this setting. Note: You must remove and re-add your fixed gift card amounts if you change this setting."
+msgstr ""
+
+#: admin/pw-gift-cards-admin.php:89
+msgid "Redeem Location - Cart"
+msgstr ""
+
+#: admin/pw-gift-cards-admin.php:90
 msgid "Specifies where the \"Apply Gift Card\" box appears on the Cart page."
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:91
-msgid "Above the \"Proceed to Checkout\" button."
-msgstr ""
-
-#: admin/pw-gift-cards-admin.php:92
-#: admin/pw-gift-cards-admin.php:107
-msgid "Below the \"Apply Coupon\" area."
-msgstr ""
-
-#: admin/pw-gift-cards-admin.php:93
-#: admin/pw-gift-cards-admin.php:108
-msgid "Do not display gift card field."
-msgstr ""
-
-#: admin/pw-gift-cards-admin.php:97
-msgid "Redeem Location - Checkout"
+#: admin/pw-gift-cards-admin.php:90
+msgid "(Classic Cart only)"
 msgstr ""
 
 #: admin/pw-gift-cards-admin.php:98
+msgid "Above the \"Proceed to Checkout\" button."
+msgstr ""
+
+#: admin/pw-gift-cards-admin.php:99
+#: admin/pw-gift-cards-admin.php:114
+msgid "Below the \"Apply Coupon\" area."
+msgstr ""
+
+#: admin/pw-gift-cards-admin.php:100
+#: admin/pw-gift-cards-admin.php:115
+msgid "Do not display gift card field."
+msgstr ""
+
+#: admin/pw-gift-cards-admin.php:104
+msgid "Redeem Location - Checkout"
+msgstr ""
+
+#: admin/pw-gift-cards-admin.php:105
 msgid "Specifies where the \"Apply Gift Card\" box appears on the Checkout page."
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:106
+#: admin/pw-gift-cards-admin.php:105
+msgid "(Classic Checkout only)"
+msgstr ""
+
+#: admin/pw-gift-cards-admin.php:113
 msgid "Below the \"Payment Methods\" area."
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:112
+#: admin/pw-gift-cards-admin.php:119
+msgid "Hide the \"Apply Gift Card\" form on Blocks"
+msgstr ""
+
+#: admin/pw-gift-cards-admin.php:120
+msgid "Hide the Apply Gift Card form on the Cart and Checkout Blocks. Default: unchecked."
+msgstr ""
+
+#: admin/pw-gift-cards-admin.php:126
 msgid "Hide Pimwick Plugins Menu"
 msgstr ""
 
 #. translators: %s is PW Gift Cards.
-#: admin/pw-gift-cards-admin.php:114
+#: admin/pw-gift-cards-admin.php:128
 msgid "Do not show the Pimwick Plugins menu on the left. You can still access the dashboard via WooCommerce > %s"
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:163
+#: admin/pw-gift-cards-admin.php:177
 msgid "Configuration error detected by"
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:164
+#: admin/pw-gift-cards-admin.php:178
 msgid "Your PayPal payment gateway is incorrectly configured. You should not have both IPN and PDT enabled. The \"IPN Email Notifications\" setting is enabled and there is also a \"PayPal Identity Token\" (PDT) value set. PayPal is reaching back to your site twice to confirm the payment. This causes things to happen twice including email notifications, stock reduction, and gift card generation. Go to WooCommerce -> Settings -> Payments -> PayPal and either clear the value from the \"PayPal Identity Token\" field or disable the \"IPN Email Notifications\" setting."
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:165
+#: admin/pw-gift-cards-admin.php:179
 msgid "Dismiss this notice"
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:193
-#: admin/pw-gift-cards-admin.php:204
+#: admin/pw-gift-cards-admin.php:207
+#: admin/pw-gift-cards-admin.php:218
 msgid "Pimwick Plugins"
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:253
+#: admin/pw-gift-cards-admin.php:267
 msgid "Note: Be sure to save changes before sending a preview email."
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:254
+#: admin/pw-gift-cards-admin.php:268
 msgid "Recipient email address?"
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:255
+#: admin/pw-gift-cards-admin.php:269
 msgid "Reset to the default Email Design?"
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:283
+#: admin/pw-gift-cards-admin.php:297
 msgid "Wait"
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:284
+#: admin/pw-gift-cards-admin.php:298
 msgid "Add"
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:285
+#: admin/pw-gift-cards-admin.php:299
 msgid "Remove"
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:286
+#: admin/pw-gift-cards-admin.php:300
 #: includes/class-wc-product-pw-gift-card.php:60
 msgid "Amount must be greater than zero."
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:287
+#: admin/pw-gift-cards-admin.php:301
 msgid "Amount must be greater than minimum amount."
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:288
+#: admin/pw-gift-cards-admin.php:302
 msgid "Amount must be less than maximum amount."
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:289
-#: includes/pw-gift-cards-redeeming.php:671
+#: admin/pw-gift-cards-admin.php:303
+#: includes/pw-gift-cards-redeeming.php:685
 msgid "Error"
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:308
-#: admin/pw-gift-cards-admin.php:582
-#: pw-gift-cards.php:139
+#: admin/pw-gift-cards-admin.php:322
+#: admin/pw-gift-cards-admin.php:598
+#: pw-gift-cards.php:163
 msgid "Gift Card"
 msgstr ""
 
 #. translators: %s is the product id.
-#: admin/pw-gift-cards-admin.php:422
+#: admin/pw-gift-cards-admin.php:436
 msgid "Could not locate product id %s"
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:446
+#: admin/pw-gift-cards-admin.php:460
 msgid "Could not locate product using product_id "
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:562
+#: admin/pw-gift-cards-admin.php:578
 msgid "Settings saved."
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:646
-#: admin/pw-gift-cards-admin.php:660
+#: admin/pw-gift-cards-admin.php:662
+#: admin/pw-gift-cards-admin.php:676
 msgid "Gift card not found."
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:681
+#: admin/pw-gift-cards-admin.php:697
 msgid "Design saved."
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:699
+#: admin/pw-gift-cards-admin.php:715
 msgid "Preview email system"
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:700
+#: admin/pw-gift-cards-admin.php:716
 #: admin/ui/sections/designer-panel.php:55
 msgid "Recipient Name"
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:701
+#: admin/pw-gift-cards-admin.php:717
 #: admin/ui/sections/designer-panel.php:57
 msgid "Gift card message to the recipient from the sender."
 msgstr ""
 
-#: admin/pw-gift-cards-admin.php:706
+#: admin/pw-gift-cards-admin.php:722
 msgid "Email sent."
 msgstr ""
 
@@ -274,7 +298,7 @@ msgid "Upgrade to <a href=\"%s\" target=\"_blank\">PW WooCommerce Gift Cards Pro
 msgstr ""
 
 #: admin/ui/order-gift-card-total.php:36
-#: includes/pw-gift-cards-redeeming.php:757
+#: includes/pw-gift-cards-redeeming.php:771
 msgid "PW Gift Card"
 msgstr ""
 
@@ -402,7 +426,7 @@ msgid "Note"
 msgstr ""
 
 #: admin/ui/sections/activity-records.php:30
-#: pw-gift-cards.php:140
+#: pw-gift-cards.php:164
 #: templates/woocommerce/emails/customer-pw-gift-card.php:159
 msgid "Amount"
 msgstr ""
@@ -500,31 +524,55 @@ msgid "Card Number"
 msgstr ""
 
 #: admin/ui/sections/search-results.php:34
+msgid "Create Date"
+msgstr ""
+
+#: admin/ui/sections/search-results.php:35
 msgid "Expiration Date"
 msgstr ""
 
-#: admin/ui/sections/search-results.php:50
+#: admin/ui/sections/search-results.php:51
 msgid "Card has been deleted."
 msgstr ""
 
-#: admin/ui/sections/search-results.php:62
+#: admin/ui/sections/search-results.php:68
 msgid "View activity"
 msgstr ""
 
-#: admin/ui/sections/search-results.php:64
+#: admin/ui/sections/search-results.php:70
 msgid "Delete"
 msgstr ""
 
-#: admin/ui/sections/search-results.php:67
+#: admin/ui/sections/search-results.php:73
 msgid "Restore"
 msgstr ""
 
-#: admin/ui/sections/search-results.php:90
+#: admin/ui/sections/search-results.php:96
 msgid "Are you sure you want to delete this gift card?"
 msgstr ""
 
 #: admin/ui/sections/settings.php:36
 msgid "Save Settings"
+msgstr ""
+
+#: includes/blocks/class-pw-gift-cards-blocks-endpoint.php:49
+msgid "Gift card number is required."
+msgstr ""
+
+#: includes/blocks/class-pw-gift-cards-blocks-endpoint.php:105
+msgid "Applied PW Gift Cards."
+msgstr ""
+
+#: includes/blocks/class-pw-gift-cards-blocks-endpoint.php:112
+msgid "Gift card number."
+msgstr ""
+
+#: includes/blocks/class-pw-gift-cards-blocks-endpoint.php:117
+msgid "Amount applied to this cart."
+msgstr ""
+
+#: includes/blocks/class-pw-gift-cards-blocks-endpoint.php:122
+msgid "Remaining gift card balance."
 msgstr ""
 
 #: includes/class-pw-gift-card-activity.php:90
@@ -535,56 +583,57 @@ msgstr ""
 msgid "Invalid action value: "
 msgstr ""
 
-#: includes/class-pw-gift-card.php:70
+#: includes/class-pw-gift-card.php:73
 msgid "Card number does not exist."
 msgstr ""
 
-#: includes/class-pw-gift-card.php:73
+#: includes/class-pw-gift-card.php:76
 msgid "Enter a card number."
 msgstr ""
 
-#: includes/class-pw-gift-card.php:119
+#: includes/class-pw-gift-card.php:123
 #: templates/woocommerce/cart/cart-pw-gift-card.php:55
 #: templates/woocommerce/checkout/pw-gift-cards.php:54
 msgid "Expired"
 msgstr ""
 
-#: includes/class-pw-gift-card.php:122
+#: includes/class-pw-gift-card.php:126
+#: includes/class-pw-gift-card.php:137
 msgid "None"
 msgstr ""
 
-#: includes/class-pw-gift-card.php:213
+#: includes/class-pw-gift-card.php:228
 msgid "Amount added should be greater than zero."
 msgstr ""
 
-#: includes/class-pw-gift-card.php:226
+#: includes/class-pw-gift-card.php:241
 msgid "Amount deducted should be less than zero."
 msgstr ""
 
-#: includes/class-pw-gift-card.php:235
+#: includes/class-pw-gift-card.php:250
 msgid "Unable to adjust balance, card is not active."
 msgstr ""
 
-#: includes/class-pw-gift-card.php:299
+#: includes/class-pw-gift-card.php:314
 msgid "Card Number cannot be empty."
 msgstr ""
 
 #. translators: %1$s is the number, %2$s is the database table name, %3$s is the inserted gift card id, and %4$s is the database error message.
-#: includes/class-pw-gift-card.php:312
+#: includes/class-pw-gift-card.php:327
 msgid "Gift Card %1$s was inserted into table %2$s and received database id %3$s but it could not be retrieved. Last error: %4$s"
 msgstr ""
 
 #. translators: %1$s is the number, %2$s is the database table name, %3$s is the database error message.
-#: includes/class-pw-gift-card.php:316
+#: includes/class-pw-gift-card.php:331
 msgid "Gift Card %1$s could not be inserted into table %2$s. Last error: %3$s"
 msgstr ""
 
-#: includes/class-pw-gift-card.php:322
+#: includes/class-pw-gift-card.php:337
 msgid "Unknown error in add_card method."
 msgstr ""
 
 #. translators: %1$s is the property name, %2$s is the class name.
-#: includes/class-pw-gift-card.php:413
+#: includes/class-pw-gift-card.php:383
 msgid "Property %1$s does not exist on %2$s"
 msgstr ""
 
@@ -620,41 +669,41 @@ msgstr ""
 msgid "{sender} sent you a gift card"
 msgstr ""
 
-#: includes/emails/class-wc-email-pw-gift-card.php:314
+#: includes/emails/class-wc-email-pw-gift-card.php:320
 msgid "Subject"
 msgstr ""
 
 #. translators: %s is the default email subject line.
-#: includes/emails/class-wc-email-pw-gift-card.php:317
+#: includes/emails/class-wc-email-pw-gift-card.php:323
 msgid "This controls the email subject line. Leave blank to use the default subject: <code>%s</code>."
 msgstr ""
 
-#: includes/emails/class-wc-email-pw-gift-card.php:322
+#: includes/emails/class-wc-email-pw-gift-card.php:328
 msgid "Email Heading"
 msgstr ""
 
 #. translators: %s is the default heading string.
-#: includes/emails/class-wc-email-pw-gift-card.php:325
+#: includes/emails/class-wc-email-pw-gift-card.php:331
 msgid "This controls the main heading contained within the email notification. Leave blank to use the default heading: <code>%s</code>."
 msgstr ""
 
-#: includes/emails/class-wc-email-pw-gift-card.php:330
+#: includes/emails/class-wc-email-pw-gift-card.php:336
 msgid "Email type"
 msgstr ""
 
-#: includes/emails/class-wc-email-pw-gift-card.php:332
+#: includes/emails/class-wc-email-pw-gift-card.php:338
 msgid "Choose which format of email to send."
 msgstr ""
 
-#: includes/emails/class-wc-email-pw-gift-card.php:336
+#: includes/emails/class-wc-email-pw-gift-card.php:342
 msgid "Plain text"
 msgstr ""
 
-#: includes/emails/class-wc-email-pw-gift-card.php:337
+#: includes/emails/class-wc-email-pw-gift-card.php:343
 msgid "HTML"
 msgstr ""
 
-#: includes/emails/class-wc-email-pw-gift-card.php:338
+#: includes/emails/class-wc-email-pw-gift-card.php:344
 msgid "Multipart"
 msgstr ""
 
@@ -663,96 +712,100 @@ msgid "Choose an amount"
 msgstr ""
 
 #. translators: %1$s is the order id, %2$s is the billing first name, %3$s is the billing last name.
-#: includes/pw-gift-cards-purchasing.php:290
+#: includes/pw-gift-cards-purchasing.php:275
 msgid "Order %1$s purchased by %2$s %3$s"
 msgstr ""
 
-#: includes/pw-gift-cards-purchasing.php:313
+#: includes/pw-gift-cards-purchasing.php:298
 msgid "Unable to retrieve variation "
 msgstr ""
 
-#: includes/pw-gift-cards-purchasing.php:428
+#: includes/pw-gift-cards-purchasing.php:413
 msgid " (inactive)"
 msgstr ""
 
-#: includes/pw-gift-cards-purchasing.php:453
+#: includes/pw-gift-cards-purchasing.php:438
 msgid "Generated and emailed after the order is marked Complete."
 msgstr ""
 
 #. translators: %s is the count of gift cards redeemed.
-#: includes/pw-gift-cards-redeeming.php:398
+#: includes/pw-gift-cards-redeeming.php:412
 msgid "Gift card %s:"
 msgid_plural "Gift cards %s:"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s is the shipping method.
-#: includes/pw-gift-cards-redeeming.php:471
+#: includes/pw-gift-cards-redeeming.php:485
 msgid "Shipping via %s"
 msgstr ""
 
-#: includes/pw-gift-cards-redeeming.php:536
-#: includes/pw-gift-cards-redeeming.php:589
-#: includes/pw-gift-cards-redeeming.php:666
-#: pw-gift-cards.php:211
+#: includes/pw-gift-cards-redeeming.php:550
+#: includes/pw-gift-cards-redeeming.php:603
+#: includes/pw-gift-cards-redeeming.php:680
+#: pw-gift-cards.php:235
 msgid "This gift card has a zero balance."
 msgstr ""
 
-#: includes/pw-gift-cards-redeeming.php:539
-#: includes/pw-gift-cards-redeeming.php:669
-#: pw-gift-cards.php:215
+#: includes/pw-gift-cards-redeeming.php:553
+#: includes/pw-gift-cards-redeeming.php:683
+#: pw-gift-cards.php:239
 msgid "Gift card applied."
 msgstr ""
 
-#: includes/pw-gift-cards-redeeming.php:554
+#: includes/pw-gift-cards-redeeming.php:568
 msgid "Gift card removed."
 msgstr ""
 
-#: includes/pw-gift-cards-redeeming.php:585
+#: includes/pw-gift-cards-redeeming.php:599
 msgid "Gift cards cannot be used to purchase other gift cards."
 msgstr ""
 
-#: includes/pw-gift-cards-redeeming.php:592
+#: includes/pw-gift-cards-redeeming.php:606
 msgid "Card is inactive."
 msgstr ""
 
-#: pw-gift-cards.php:138
+#: pw-gift-cards.php:79
+msgid "The PW WooCommerce Gift Cards plugin cannot be activated because the Pro version is already installed. You can safely delete this version."
+msgstr ""
+
+#: pw-gift-cards.php:162
 msgid "Gift Card Amount"
 msgstr ""
 
-#: pw-gift-cards.php:141
+#: pw-gift-cards.php:165
 msgid "To"
 msgstr ""
 
-#: pw-gift-cards.php:142
+#: pw-gift-cards.php:166
 #: templates/woocommerce/emails/customer-pw-gift-card.php:129
 msgid "From"
 msgstr ""
 
-#: pw-gift-cards.php:143
+#: pw-gift-cards.php:167
 msgid "Message"
 msgstr ""
 
-#: pw-gift-cards.php:233
+#: pw-gift-cards.php:257
 msgid "Required"
 msgstr ""
 
 #. translators: %s is the woocommerce currency symbol.
-#: pw-gift-cards.php:235
+#: pw-gift-cards.php:259
 msgid "Minimum amount is %s"
 msgstr ""
 
 #. translators: %s is the woocommerce currency symbol.
-#: pw-gift-cards.php:237
+#: pw-gift-cards.php:261
 msgid "Maximum amount is %s"
 msgstr ""
 
-#: pw-gift-cards.php:238
+#: pw-gift-cards.php:262
 msgid "The \"To\" field should only contain email addresses. The following recipients do not look like valid email addresses:"
 msgstr ""
 
 #. translators: %s is the WooCommerce minimum version number.
-#: pw-gift-cards.php:378
+#: pw-gift-cards.php:402
 msgid "Requires WooCommerce version %s or later."
 msgstr ""
 
@@ -764,6 +817,9 @@ msgstr ""
 #: templates/woocommerce/cart/apply-gift-card.php:52
 #: templates/woocommerce/checkout/coupon-area-pw-gift-card.php:39
 #: templates/woocommerce/checkout/payment-method-pw-gift-card.php:34
+#: assets/blocks/blocks.jsx:157
+#: assets/blocks/blocks.jsx:158
+#: assets/dist/blocks.js:1
 msgid "Gift card number"
 msgstr ""
 
@@ -782,6 +838,8 @@ msgstr ""
 #: templates/woocommerce/cart/apply-gift-card.php:50
 #: templates/woocommerce/checkout/coupon-area-pw-gift-card.php:31
 #: templates/woocommerce/checkout/payment-method-pw-gift-card.php:32
+#: assets/blocks/blocks.jsx:149
+#: assets/dist/blocks.js:1
 msgid "Have a gift card?"
 msgstr ""
 
@@ -797,6 +855,8 @@ msgstr ""
 #. translators: %s is the formatted balance.
 #: templates/woocommerce/cart/cart-pw-gift-card.php:48
 #: templates/woocommerce/checkout/pw-gift-cards.php:48
+#: assets/blocks/blocks.jsx:105
+#: assets/dist/blocks.js:1
 msgid "Remaining balance is %s"
 msgstr ""
 
@@ -818,6 +878,8 @@ msgid "If you have a gift card number, please apply it below."
 msgstr ""
 
 #: templates/woocommerce/checkout/payment-method-pw-gift-card.php:35
+#: assets/blocks/blocks.jsx:170
+#: assets/dist/blocks.js:1
 msgid "Apply Gift Card"
 msgstr ""
 
@@ -884,4 +946,29 @@ msgstr ""
 
 #: templates/woocommerce/single-product/add-to-cart/pw-gift-card-before-add-to-cart-quantity.php:130
 msgid "1 to each recipient"
+msgstr ""
+
+#: assets/blocks/blocks.jsx:48
+#: assets/dist/blocks.js:1
+msgid "Enter a gift card code."
+msgstr ""
+
+#: assets/blocks/blocks.jsx:58
+#: assets/dist/blocks.js:1
+msgid "Something went wrong."
+msgstr ""
+
+#: assets/blocks/blocks.jsx:79
+#: assets/dist/blocks.js:1
+msgid "Unable to remove gift card."
+msgstr ""
+
+#: assets/blocks/blocks.jsx:92
+#: assets/dist/blocks.js:1
+msgid "Gift cards applied"
+msgstr ""
+
+#: assets/blocks/blocks.jsx:123
+#: assets/dist/blocks.js:1
+msgid "Remove gift card %s"
 msgstr ""

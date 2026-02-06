@@ -80,4 +80,95 @@ class WC_Order_Item_PW_Gift_Card extends WC_Order_Item {
     public function get_amount( $context = 'view' ) {
         return $this->get_prop( 'amount', $context );
     }
+
+    /**
+     * Stub for payment gateways (e.g. Payment Plugins for PayPal) that expect product-like order items.
+     * Redemption items are not products; return 0 so gateways do not call .indexOf() on undefined.
+     *
+     * @return int
+     */
+    public function get_product_id() {
+        return 0;
+    }
+
+    /**
+     * Stub for payment gateways that expect product-like order items.
+     * Return empty string so gateways do not call .indexOf() on undefined (e.g. create_order_error).
+     *
+     * @return string
+     */
+    public function get_sku() {
+        return '';
+    }
+
+    /**
+     * Stub for payment gateways that expect product-like order items.
+     * Redemption items have no associated product.
+     *
+     * @return null
+     */
+    public function get_product() {
+        return null;
+    }
+
+    /**
+     * Stub for payment gateways that expect WC_Order_Item_Product-style quantity.
+     *
+     * @return int
+     */
+    public function get_quantity() {
+        return 1;
+    }
+
+    /**
+     * Include product-like keys in data array so gateways (e.g. PayPal) that build
+     * payloads from get_data() or array access never see undefined sku/product_id.
+     *
+     * @return array
+     */
+    public function get_data() {
+        $data = parent::get_data();
+        $data['product_id']  = $this->get_product_id();
+        $data['variation_id'] = 0;
+        $data['quantity']   = $this->get_quantity();
+        $data['sku']        = $this->get_sku();
+        return $data;
+    }
+
+    /**
+     * ArrayAccess: return stub values for product-like keys so JS never sees undefined.
+     *
+     * @param string $offset Key (e.g. sku, product_id).
+     * @return mixed
+     */
+    #[\ReturnTypeWillChange]
+    public function offsetGet( $offset ) {
+        if ( 'sku' === $offset ) {
+            return $this->get_sku();
+        }
+        if ( 'product_id' === $offset ) {
+            return $this->get_product_id();
+        }
+        if ( 'variation_id' === $offset ) {
+            return 0;
+        }
+        if ( 'quantity' === $offset ) {
+            return $this->get_quantity();
+        }
+        return parent::offsetGet( $offset );
+    }
+
+    /**
+     * ArrayAccess: report that product-like keys exist so they are included in serialization.
+     *
+     * @param string $offset Key (e.g. sku, product_id).
+     * @return bool
+     */
+    #[\ReturnTypeWillChange]
+    public function offsetExists( $offset ) {
+        if ( in_array( $offset, array( 'sku', 'product_id', 'variation_id', 'quantity' ), true ) ) {
+            return true;
+        }
+        return parent::offsetExists( $offset );
+    }
 }
