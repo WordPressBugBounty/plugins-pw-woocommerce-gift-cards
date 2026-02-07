@@ -55,6 +55,12 @@ final class PW_Gift_Cards_Blocks {
             $order_id = $order->get_id();
 
             $pw_gift_cards_redeeming->woocommerce_checkout_create_order( $order );
+            // Recalculate totals so order->get_total() reflects gift card reduction before process_payment runs.
+            // Without this, Stripe/WooCommerce Payments charges the full pre-gift-card amount.
+            if ( $order->get_items( 'pw_gift_card' ) ) {
+                $order->calculate_totals();
+                $order->save();
+            }
             $pw_gift_cards_redeeming->debit_gift_cards( $order_id, $order, "order_id: $order_id woocommerce_store_api_checkout_order_processed" );
         }
     }

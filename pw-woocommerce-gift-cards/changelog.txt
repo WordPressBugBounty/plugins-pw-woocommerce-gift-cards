@@ -1,3 +1,6 @@
+= 2.35 =
+* Blocks updates for Express Payment options.
+
 = 2.34 =
 * Integration with payment gateways and bug fixes.
 
