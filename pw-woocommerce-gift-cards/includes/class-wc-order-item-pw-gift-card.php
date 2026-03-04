@@ -92,6 +92,16 @@ class WC_Order_Item_PW_Gift_Card extends WC_Order_Item {
     }
 
     /**
+     * Stub for plugins (e.g. XA WooCommerce Subscriptions) that call get_variation_id() on all order items.
+     * Gift card items have no variation; return 0 so hf_get_canonical_product_id() and similar code do not fatal.
+     *
+     * @return int
+     */
+    public function get_variation_id() {
+        return 0;
+    }
+
+    /**
      * Stub for payment gateways that expect product-like order items.
      * Return empty string so gateways do not call .indexOf() on undefined (e.g. create_order_error).
      *
