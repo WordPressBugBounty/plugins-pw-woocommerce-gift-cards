@@ -1,3 +1,6 @@
+= 2.37 =
+* Other bug fixes.
+
 = 2.36 =
 * Minor compatibility fix.
 

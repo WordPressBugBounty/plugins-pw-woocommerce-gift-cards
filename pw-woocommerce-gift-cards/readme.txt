@@ -5,7 +5,7 @@ Tags: woocommerce, gift cards, gift certificates, vouchers, store credit
 Requires at least: 4.5
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.36
+Stable tag: 2.37
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,6 +103,9 @@ The following currency switcher plugins are supported:
 
 == Changelog ==
 
+= 2.37 =
+* Other bug fixes.
+
 = 2.36 =
 * Minor compatibility fix.
 
@@ -130,15 +133,12 @@ The following currency switcher plugins are supported:
 = 2.28 =
 * Update for "No payment method provided." error during checkout.
 
-= 2.27 =
-* Fixed an issue with translating the gift card sections of the WooCommerce Cart and Checkout Blocks.
-
 = Previous versions =
 * See changelog.txt
 
 == Upgrade Notice ==
 
-= 2.36 =
-* Minor compatibility fix.
+= 2.37 =
+* Other bug fixes.
 
 

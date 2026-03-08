@@ -495,6 +495,12 @@ final class PW_Gift_Cards_Redeeming {
             return;
         }
 
+        // Idempotency: do not add gift card items if the order already has any.
+        // Prevents duplicate line items when the hook or block callback runs more than once
+        if ( $order->get_items( 'pw_gift_card' ) ) {
+            return;
+        }
+
         foreach ( $session_data['gift_cards'] as $card_number => $amount ) {
             $pw_gift_card = new PW_Gift_Card( $card_number );
             if ( $pw_gift_card->get_id() ) {
