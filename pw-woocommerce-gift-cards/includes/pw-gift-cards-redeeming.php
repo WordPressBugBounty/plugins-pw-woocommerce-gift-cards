@@ -515,6 +515,13 @@ final class PW_Gift_Cards_Redeeming {
                 $order->add_item( $item );
             }
         }
+
+        // Recalculate totals so order->get_total() reflects gift card reduction before process_payment runs.
+        // Without this, gateways (e.g. Stripe) may charge the full pre-gift-card amount.
+        if ( $order->get_items( 'pw_gift_card' ) ) {
+            $order->calculate_totals();
+            $order->save();
+        }
     }
 
     function woocommerce_proceed_to_checkout() {
