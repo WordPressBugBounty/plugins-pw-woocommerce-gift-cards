@@ -1,3 +1,6 @@
+= 2.39 =
+* Compatibility with WooCommerce 10.6.
+
 = 2.38 =
 * Additional order logic for payment gateway integration.
 

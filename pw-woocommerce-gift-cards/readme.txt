@@ -5,7 +5,7 @@ Tags: woocommerce, gift cards, gift certificates, vouchers, store credit
 Requires at least: 4.5
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 2.38
+Stable tag: 2.39
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,6 +103,9 @@ The following currency switcher plugins are supported:
 
 == Changelog ==
 
+= 2.39 =
+* Compatibility with WooCommerce 10.6.
+
 = 2.38 =
 * Additional order logic for payment gateway integration.
 
@@ -130,15 +133,12 @@ The following currency switcher plugins are supported:
 = 2.30 =
 * Added additional logic for gift card creation.
 
-= 2.29 =
-* Bug fix for null session.
-
 = Previous versions =
 * See changelog.txt
 
 == Upgrade Notice ==
 
-= 2.38 =
-* Additional order logic for payment gateway integration.
+= 2.39 =
+* Compatibility with WooCommerce 10.6.
 
 
