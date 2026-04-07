@@ -123,6 +123,13 @@ final class PW_Gift_Cards_Admin {
                 'type'    => 'checkbox',
             ),
             array(
+                'title'   => __( 'Wrap admin action buttons', 'pw-woocommerce-gift-cards' ),
+                'desc'    => __( 'On the Search results grid, allow action buttons in the last column to wrap to a new line instead of forcing horizontal scrolling. Default: Unchecked.', 'pw-woocommerce-gift-cards' ),
+                'id'      => 'pwgc_wrap_admin_action_buttons',
+                'default' => 'no',
+                'type'    => 'checkbox',
+            ),
+            array(
                 'title'    => __( 'Hide Pimwick Plugins Menu', 'pw-woocommerce-gift-cards' ),
                 // translators: %s is PW Gift Cards.
                 'desc'     => sprintf( __( 'Do not show the Pimwick Plugins menu on the left. You can still access the dashboard via WooCommerce > %s', 'pw-woocommerce-gift-cards' ), __( 'PW Gift Cards', 'pw-woocommerce-gift-cards' ) ),

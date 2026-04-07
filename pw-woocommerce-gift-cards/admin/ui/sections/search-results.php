@@ -20,6 +20,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 defined( 'ABSPATH' ) or exit;
 
+$wrap_buttons_class = ( 'yes' === get_option( 'pwgc_wrap_admin_action_buttons', 'no' ) ) ? ' pwgc-search-result-buttons-wrap' : '';
+
 if ( count( $gift_cards ) == 0 ) {
     ?>
     <h1><?php _e( 'No results', 'pw-woocommerce-gift-cards' ); ?></h1>
@@ -64,7 +66,7 @@ if ( count( $gift_cards ) == 0 ) {
                             echo $gift_card->get_expiration_date_html();
                         ?>
                     </td>
-                    <td class="pwgc-search-result-buttons">
+                    <td class="pwgc-search-result-buttons<?php echo esc_attr( $wrap_buttons_class ); ?>">
                         <a href="#" class="pwgc-view-activity button button-secondary"><i class="fas fa-history"></i> <?php _e( 'View activity', 'pw-woocommerce-gift-cards' ); ?></a>
                         <span class="pwgc-buttons-active <?php if ( !$gift_card->get_active() ) { echo 'pwgc-hidden'; } ?>">
                             <a href="#" class="pwgc-delete button button-secondary"><i class="fas fa-times"></i> <?php _e( 'Delete', 'pw-woocommerce-gift-cards' ); ?></a>

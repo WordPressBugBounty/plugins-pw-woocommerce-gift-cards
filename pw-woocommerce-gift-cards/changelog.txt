@@ -1,3 +1,6 @@
+= 2.40 =
+* Minor update for redeeming location in cart and checkout. Wrap admin action buttons option in settings. Fix non-scalar attribute labels to reduce log noise.
+
 = 2.39 =
 * Compatibility with WooCommerce 10.6.
 

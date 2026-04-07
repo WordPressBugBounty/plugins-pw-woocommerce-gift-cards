@@ -164,6 +164,16 @@
     white-space: nowrap;
 }
 
+.pwgc-admin-table td.pwgc-search-result-buttons.pwgc-search-result-buttons-wrap {
+    white-space: normal;
+}
+
+.pwgc-admin-table td.pwgc-search-result-buttons.pwgc-search-result-buttons-wrap a.button {
+    display: inline-block;
+    margin: 0;
+    white-space: nowrap;
+}
+
 .pwgc-admin-table td, .pwgc-admin-table th {
     border: 1px solid #ddd;
     padding: 8px;

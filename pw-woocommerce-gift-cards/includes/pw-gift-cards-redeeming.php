@@ -64,10 +64,15 @@ final class PW_Gift_Cards_Redeeming {
         // Fixes a conflict with the 'Advanced Dynamic Pricing' plugin by AlgolPlus
         add_filter( 'wdp_calculate_totals_hook_priority', function( $priority ) use ( $redeem_hook_priority ) { return $redeem_hook_priority - 1; });
 
-        add_action( 'woocommerce_before_checkout_form', array( $this, 'woocommerce_before_checkout_form' ), 40 );
+        $redeem_checkout_location = get_option( 'pwgc_redeem_checkout_location', 'review_order_before_submit' );
+        if ( 'before_checkout_form' === $redeem_checkout_location ) {
+            add_action( 'woocommerce_before_checkout_form', array( $this, 'woocommerce_before_checkout_form' ), 40 );
+        }
         add_action( 'woocommerce_cart_totals_before_order_total', array( $this, 'woocommerce_cart_totals_before_order_total' ) );
         add_action( 'woocommerce_review_order_before_order_total', array( $this, 'woocommerce_review_order_before_order_total' ) );
-        add_action( 'woocommerce_review_order_before_submit', array( $this, 'woocommerce_review_order_before_submit' ) );
+        if ( 'review_order_before_submit' === $redeem_checkout_location ) {
+            add_action( 'woocommerce_review_order_before_submit', array( $this, 'woocommerce_review_order_before_submit' ) );
+        }
         add_action( 'woocommerce_after_calculate_totals', array( $this, 'woocommerce_after_calculate_totals' ), $redeem_hook_priority );
         add_action( 'woocommerce_update_order', array( $this, 'woocommerce_update_order' ) );
         add_action( 'woocommerce_order_after_calculate_totals', array( $this, 'woocommerce_order_after_calculate_totals' ), 10, 2 );
