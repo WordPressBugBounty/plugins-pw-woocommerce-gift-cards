@@ -12,7 +12,35 @@ final class PW_Gift_Cards_Blocks {
         add_action( 'woocommerce_store_api_checkout_order_processed', array( $this, 'woocommerce_store_api_checkout_order_processed' ) );
     }
 
+    function site_uses_cart_or_checkout_blocks() {
+        $page_ids = array(
+            wc_get_page_id( 'cart' ),
+            wc_get_page_id( 'checkout' ),
+        );
+
+        foreach ( $page_ids as $page_id ) {
+            if ( empty( $page_id ) || $page_id <= 0 ) {
+                continue;
+            }
+
+            $page_content = get_post_field( 'post_content', $page_id );
+            if ( empty( $page_content ) ) {
+                continue;
+            }
+
+            if ( has_block( 'woocommerce/cart', $page_content ) || has_block( 'woocommerce/checkout', $page_content ) ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     function enqueue_block_assets() {
+        if ( ! $this->site_uses_cart_or_checkout_blocks() ) {
+            return;
+        }
+
         global $pw_gift_cards;
 
         wp_register_script(
