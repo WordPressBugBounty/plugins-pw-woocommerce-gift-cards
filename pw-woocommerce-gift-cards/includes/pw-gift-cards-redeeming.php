@@ -69,7 +69,25 @@ final class PW_Gift_Cards_Redeeming {
             add_action( 'woocommerce_before_checkout_form', array( $this, 'woocommerce_before_checkout_form' ), 40 );
         }
         add_action( 'woocommerce_cart_totals_before_order_total', array( $this, 'woocommerce_cart_totals_before_order_total' ) );
-        add_action( 'woocommerce_review_order_before_order_total', array( $this, 'woocommerce_review_order_before_order_total' ) );
+
+        $checkout_gift_cards_hook_map = array(
+            'before_order_total'   => 'woocommerce_review_order_before_order_total',
+            'after_cart_contents'  => 'woocommerce_review_order_after_cart_contents',
+            'after_order_total'    => 'woocommerce_review_order_after_order_total',
+        );
+        $checkout_gift_cards_hook_key = get_option( 'pwgc_checkout_applied_gift_cards_hook', 'before_order_total' );
+        $checkout_gift_cards_hook = isset( $checkout_gift_cards_hook_map[ $checkout_gift_cards_hook_key ] )
+            ? $checkout_gift_cards_hook_map[ $checkout_gift_cards_hook_key ]
+            : $checkout_gift_cards_hook_map['before_order_total'];
+        $checkout_gift_cards_hook = apply_filters( 'pwgc_checkout_applied_gift_cards_render_hook', $checkout_gift_cards_hook, $checkout_gift_cards_hook_key );
+        $checkout_gift_cards_allowed_hooks = apply_filters(
+            'pwgc_checkout_applied_gift_cards_render_hook_whitelist',
+            array_values( $checkout_gift_cards_hook_map )
+        );
+        if ( ! in_array( $checkout_gift_cards_hook, $checkout_gift_cards_allowed_hooks, true ) ) {
+            $checkout_gift_cards_hook = $checkout_gift_cards_hook_map['before_order_total'];
+        }
+        add_action( $checkout_gift_cards_hook, array( $this, 'woocommerce_review_order_before_order_total' ) );
         if ( 'review_order_before_submit' === $redeem_checkout_location ) {
             add_action( 'woocommerce_review_order_before_submit', array( $this, 'woocommerce_review_order_before_submit' ) );
         }

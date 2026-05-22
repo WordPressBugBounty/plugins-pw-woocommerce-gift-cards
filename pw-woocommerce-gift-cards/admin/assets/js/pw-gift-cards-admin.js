@@ -1,4 +1,22 @@
+function pwgcEnsureAdminSections() {
+    var main = jQuery('.pwgc-main-content');
+
+    if (!main.length) {
+        return;
+    }
+
+    jQuery.each(['balances', 'designer', 'create', 'import', 'settings'], function(index, section) {
+        var element = jQuery('#pwgc-section-' + section);
+
+        if (element.length && element.parent()[0] !== main[0]) {
+            main.append(element);
+        }
+    });
+}
+
 jQuery(function() {
+
+    pwgcEnsureAdminSections();
 
     pwgcAdminBalanceSearch();
 

@@ -3,9 +3,9 @@ Contributors: pimwick
 Donate link: https://paypal.me/pimwick
 Tags: woocommerce, gift cards, gift certificates, vouchers, store credit
 Requires at least: 4.5
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 2.41
+Stable tag: 2.42
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,6 +103,9 @@ The following currency switcher plugins are supported:
 
 == Changelog ==
 
+= 2.42 =
+* Add configurable classic checkout location for applied gift card totals. Confirmed compatibility with WordPress 7.0. More updates for WordPress 7.0. Other bug fixes.
+
 = 2.41 =
 * Added gate before loading blocks related js file.
 
@@ -130,15 +133,12 @@ The following currency switcher plugins are supported:
 = 2.33 =
 * Integration for Payment Plugins for PayPal WooCommerce.
 
-= 2.32 =
-* Updates for gift card redeeming process.
-
 = Previous versions =
 * See changelog.txt
 
 == Upgrade Notice ==
 
-= 2.41 =
-* Added gate before loading blocks related js file.
+= 2.42 =
+* Add configurable classic checkout location for applied gift card totals. Confirmed compatibility with WordPress 7.0. More updates for WordPress 7.0. Other bug fixes.
 
 

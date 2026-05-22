@@ -1,3 +1,6 @@
+= 2.42 =
+* Add configurable classic checkout location for applied gift card totals. Confirmed compatibility with WordPress 7.0. More updates for WordPress 7.0. Other bug fixes.
+
 = 2.41 =
 * Added gate before loading blocks related js file.
 

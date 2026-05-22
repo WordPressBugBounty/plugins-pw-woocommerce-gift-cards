@@ -22,11 +22,11 @@ global $pw_gift_cards;
         <p>
             <a href="https://www.pimwick.com/gift-cards/" target="_blank"><img src="<?php echo $pw_gift_cards->relative_url( 'assets/images/pro-design-example.png' ); ?>" style="height: 225px;"></a>
         </p>
-        <p class="form-field" style="margin-top: 32px;">
-            <input type="button" id="pwgc-save-design-button" name="save_design" class="button button-primary" value="<?php _e( 'Save design', 'pw-woocommerce-gift-cards' ); ?>"></input>
+        <div class="form-field pwgc-designer-save-actions" style="margin-top: 32px;">
+            <input type="button" id="pwgc-save-design-button" name="save_design" class="button button-primary" value="<?php _e( 'Save design', 'pw-woocommerce-gift-cards' ); ?>">
             <a href="#" id="pwgc-reset-design" style="color: #A00; margin-left: 30px;"><?php _e( 'Reset design', 'pw-woocommerce-gift-cards' ); ?></a>
             <div id="pwgc-save-design-message"></div>
-        </p>
+        </div>
     </form>
 </div>
 <div id="pwgc-designer-preview" class="pwgc-designer-panel">
@@ -43,10 +43,12 @@ global $pw_gift_cards;
                 <?php
             }
         ?>
-        <span class="pwgc-preview-header"><?php _e( 'Preview', 'pw-woocommerce-gift-cards' ); ?></span>
-        <div style="float: right;">
-            <span id="pwgc-preview-email-message"></span>
-            <button id="pwgc-preview-email-button" class="button" data-email="<?php echo esc_html( get_option( 'admin_email' ) ); ?>"><i class="fas fa-envelope"></i> <?php _e( 'Send a preview email', 'pw-woocommerce-gift-cards' ); ?></button>
+        <div class="pwgc-preview-toolbar">
+            <span class="pwgc-preview-header"><?php _e( 'Preview', 'pw-woocommerce-gift-cards' ); ?></span>
+            <div class="pwgc-preview-toolbar-actions">
+                <span id="pwgc-preview-email-message"></span>
+                <button id="pwgc-preview-email-button" class="button" data-email="<?php echo esc_html( get_option( 'admin_email' ) ); ?>"><i class="fas fa-envelope"></i> <?php _e( 'Send a preview email', 'pw-woocommerce-gift-cards' ); ?></button>
+            </div>
         </div>
     </div>
     <div id="pwgc-preview-container" style="color: <?php echo get_option( 'woocommerce_email_text_color', '#3c3c3c' ); ?>; background-color: <?php echo get_option( 'woocommerce_email_body_background_color', '#ffffff' ); ?>">

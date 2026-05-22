@@ -116,6 +116,21 @@ final class PW_Gift_Cards_Admin {
                 ),
             ),
             array(
+                'title'    => __( 'Applied Gift Cards Location - Checkout', 'pw-woocommerce-gift-cards' ),
+                'desc'     => __( 'Where to show applied gift cards (amount and remove link) in the order review totals. Some themes wrap certain hooks inside a table row in a way that breaks layout; try another option if needed.', 'pw-woocommerce-gift-cards' ) . ' ' . __( '(Classic Checkout only)', 'pw-woocommerce-gift-cards' ),
+                'id'       => 'pwgc_checkout_applied_gift_cards_hook',
+                'default'  => 'before_order_total',
+                'type'     => 'select',
+                'class'    => 'wc-enhanced-select',
+                'css'      => 'min-width: 350px;',
+                'desc_tip' => false,
+                'options'  => array(
+                    'before_order_total'  => __( 'Before order total (default).', 'pw-woocommerce-gift-cards' ),
+                    'after_cart_contents' => __( 'After cart contents / before totals rows.', 'pw-woocommerce-gift-cards' ),
+                    'after_order_total'   => __( 'After order total.', 'pw-woocommerce-gift-cards' ),
+                ),
+            ),
+            array(
                 'title'   => __( 'Hide the "Apply Gift Card" form on Blocks', 'pw-woocommerce-gift-cards' ),
                 'desc'    => __( 'Hide the Apply Gift Card form on the Cart and Checkout Blocks. Default: unchecked.', 'pw-woocommerce-gift-cards' ),
                 'id'      => 'pwgc_blocks_hide_redeem_form',
