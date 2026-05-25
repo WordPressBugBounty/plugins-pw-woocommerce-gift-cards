@@ -1,3 +1,6 @@
+= 2.43 =
+* Fix PHP 8.4 fatal when summing gift card amounts on orders.
+
 = 2.42 =
 * Add configurable classic checkout location for applied gift card totals. Confirmed compatibility with WordPress 7.0. More updates for WordPress 7.0. Other bug fixes.
 

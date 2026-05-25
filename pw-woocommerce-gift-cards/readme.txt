@@ -5,7 +5,7 @@ Tags: woocommerce, gift cards, gift certificates, vouchers, store credit
 Requires at least: 4.5
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 2.42
+Stable tag: 2.43
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,6 +103,9 @@ The following currency switcher plugins are supported:
 
 == Changelog ==
 
+= 2.43 =
+* Fix PHP 8.4 fatal when summing gift card amounts on orders.
+
 = 2.42 =
 * Add configurable classic checkout location for applied gift card totals. Confirmed compatibility with WordPress 7.0. More updates for WordPress 7.0. Other bug fixes.
 
@@ -130,15 +133,12 @@ The following currency switcher plugins are supported:
 = 2.34 =
 * Integration with payment gateways and bug fixes.
 
-= 2.33 =
-* Integration for Payment Plugins for PayPal WooCommerce.
-
 = Previous versions =
 * See changelog.txt
 
 == Upgrade Notice ==
 
-= 2.42 =
-* Add configurable classic checkout location for applied gift card totals. Confirmed compatibility with WordPress 7.0. More updates for WordPress 7.0. Other bug fixes.
+= 2.43 =
+* Fix PHP 8.4 fatal when summing gift card amounts on orders.
 
 

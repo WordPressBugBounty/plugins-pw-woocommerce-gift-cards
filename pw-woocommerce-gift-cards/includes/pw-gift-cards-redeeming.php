@@ -281,7 +281,7 @@ final class PW_Gift_Cards_Redeeming {
         $gift_card_total = 0;
 
         foreach( $order->get_items( 'pw_gift_card' ) as $line ) {
-            $gift_card_total += apply_filters( 'pwgc_to_order_currency', $line->get_amount(), $order );
+            $gift_card_total += floatval( apply_filters( 'pwgc_to_order_currency', $line->get_amount(), $order ) );
         }
 
         if ( $gift_card_total > 0 ) {
@@ -298,7 +298,7 @@ final class PW_Gift_Cards_Redeeming {
         $gift_card_total = 0;
 
         foreach( $order->get_items( 'pw_gift_card' ) as $line ) {
-            $gift_card_total += apply_filters( 'pwgc_to_order_currency', $line->get_amount(), $order );
+            $gift_card_total += floatval( apply_filters( 'pwgc_to_order_currency', $line->get_amount(), $order ) );
         }
 
         if ( $gift_card_total > 0 ) {
@@ -473,7 +473,7 @@ final class PW_Gift_Cards_Redeeming {
             $gift_card_total = 0;
             foreach( $order->get_items( 'pw_gift_card' ) as $line ) {
                 $gift_cards_redeemed[] = $line->get_card_number();
-                $gift_card_total += $line->get_amount();
+                $gift_card_total += floatval( $line->get_amount() );
             }
 
             if ( !empty( $gift_card_total ) ) {
@@ -854,7 +854,7 @@ final class PW_Gift_Cards_Redeeming {
         $gift_card_items = $order->get_items( 'pw_gift_card' );
         if ( ! empty( $gift_card_items ) ) {
             foreach( $gift_card_items as $line ) {
-                $gift_card_total += apply_filters( 'pwgc_to_order_currency', $line->get_amount(), $order );
+                $gift_card_total += floatval( apply_filters( 'pwgc_to_order_currency', $line->get_amount(), $order ) );
             }
         } else {
             // Gift cards might not be on the order yet, check the session.
@@ -862,7 +862,7 @@ final class PW_Gift_Cards_Redeeming {
                 $session_data = (array) WC()->session->get( PWGC_SESSION_KEY );
                 if ( isset( $session_data['gift_cards'] ) && ! empty( $session_data['gift_cards'] ) ) {
                     foreach ( $session_data['gift_cards'] as $card_number => $amount ) {
-                        $gift_card_total += $amount;
+                        $gift_card_total += floatval( $amount );
                     }
                 }
             }
