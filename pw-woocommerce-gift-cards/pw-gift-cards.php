@@ -3,13 +3,13 @@
  * Plugin Name: PW WooCommerce Gift Cards
  * Plugin URI: https://www.pimwick.com/gift-cards/
  * Description: Sell gift cards in your WooCommerce store.
- * Version: 2.43
+ * Version: 2.44
  * Author: Pimwick, LLC
  * Author URI: https://www.pimwick.com
  * Text Domain: pw-woocommerce-gift-cards
  * Domain Path: /languages
  * WC requires at least: 4.0
- * WC tested up to: 10.6
+ * WC tested up to: 10.9
  * Requires Plugins: woocommerce
 */
 
@@ -110,7 +110,7 @@ add_action( 'plugins_loaded', function() {
         return;
     }
 
-define( 'PWGC_VERSION', '2.43' );
+define( 'PWGC_VERSION', '2.44' );
 
     load_plugin_textdomain( 'pw-woocommerce-gift-cards', false, basename( dirname( __FILE__ ) ) . '/languages' );
 
@@ -120,6 +120,7 @@ define( 'PWGC_VERSION', '2.43' );
         public $design_colors;
         public $default_designs;
         public $ignore_autocomplete_payment_methods;
+        public $pwgc_force_default_currency = false;
 
         function __construct() {
             require_once( PWGC_PLUGIN_ROOT . 'includes/pwgc-functions.php' );
@@ -179,6 +180,10 @@ define( 'PWGC_VERSION', '2.43' );
             require_once( PWGC_PLUGIN_ROOT . 'includes/class-wc-product-pw-gift-card.php' );
             require_once( PWGC_PLUGIN_ROOT . 'includes/class-wc-order-item-pw-gift-card.php' );
             require_once( PWGC_PLUGIN_ROOT . 'includes/data-stores/class-wc-order-item-pw-gift-card-data-store.php' );
+
+            foreach ( glob( dirname( __FILE__ ) . '/includes/integrations/*.php') as $file ) {
+                require_once( $file );
+            }
 
             if ( is_admin() ) {
                 require_once( PWGC_PLUGIN_ROOT . 'admin/pw-gift-cards-admin.php' );
@@ -742,7 +747,7 @@ define( 'PWGC_VERSION', '2.43' );
             }
 
             // YayCurrency Pro for WooCommerce by YayCommerce
-            if ( class_exists( 'Yay_Currency\Helpers\YayCurrencyHelper' && class_exists( 'Yay_Currency\Helpers\Helper' ) ) ) {
+            if ( class_exists( 'Yay_Currency\Helpers\YayCurrencyHelper' ) && class_exists( 'Yay_Currency\Helpers\Helper' ) ) {
                 $default_currency_code = Yay_Currency\Helpers\Helper::default_currency_code();
                 $apply_currency = Yay_Currency\Helpers\YayCurrencyHelper::detect_current_currency();
                 if ( $default_currency_code !== $apply_currency ) {
@@ -850,7 +855,7 @@ define( 'PWGC_VERSION', '2.43' );
             }
 
             // YayCurrency Pro for WooCommerce by YayCommerce
-            if ( class_exists( 'Yay_Currency\Helpers\YayCurrencyHelper' && class_exists( 'Yay_Currency\Helpers\Helper' ) ) ) {
+            if ( class_exists( 'Yay_Currency\Helpers\YayCurrencyHelper' ) && class_exists( 'Yay_Currency\Helpers\Helper' ) ) {
                 $default_currency_code = Yay_Currency\Helpers\Helper::default_currency_code();
                 $apply_currency = Yay_Currency\Helpers\YayCurrencyHelper::detect_current_currency();
                 if ( $default_currency_code !== $apply_currency ) {
@@ -862,6 +867,13 @@ define( 'PWGC_VERSION', '2.43' );
         }
 
         function set_current_currency_to_default() {
+            $this->pwgc_force_default_currency = true;
+
+            if ( ! has_filter( 'woocommerce_currency', array( $this, 'pwgc_force_default_woocommerce_currency' ) ) ) {
+                add_filter( 'woocommerce_currency', array( $this, 'pwgc_force_default_woocommerce_currency' ), 99999 );
+                add_filter( 'woocommerce_currency_symbol', array( $this, 'pwgc_force_default_woocommerce_currency_symbol' ), 99999, 2 );
+            }
+
             // WooCommerce Currency Switcher by realmag777
             if ( isset( $GLOBALS['WOOCS'] ) && method_exists( $GLOBALS['WOOCS'], 'get_currencies' ) ) {
                 $default_currency = false;
@@ -927,6 +939,29 @@ define( 'PWGC_VERSION', '2.43' );
                 $default_currency = get_option( 'woocommerce_currency' );
                 alg_wc_cs_session_set( 'alg_currency', $default_currency );
             }
+
+            // YayCurrency Pro for WooCommerce by YayCommerce
+            if ( class_exists( 'Yay_Currency\Helpers\YayCurrencyHelper' ) && class_exists( 'Yay_Currency\Helpers\Helper' ) ) {
+                if ( ! has_filter( 'yay_currency_detect_current_currency', array( $this, 'yay_currency_default_currency' ) ) ) {
+                    add_filter( 'yay_currency_detect_current_currency', array( $this, 'yay_currency_default_currency' ), 9999 );
+                }
+
+                if ( ! has_filter( 'yay_currency_apply_currency', array( $this, 'yay_currency_default_currency' ) ) ) {
+                    add_filter( 'yay_currency_apply_currency', array( $this, 'yay_currency_default_currency' ), 9999 );
+                }
+
+                if ( ! has_filter( 'yay_currency_woocommerce_currency', array( $this, 'yay_currency_woocommerce_currency_default' ) ) ) {
+                    add_filter( 'yay_currency_woocommerce_currency', array( $this, 'yay_currency_woocommerce_currency_default' ), 9999, 2 );
+                }
+
+                if ( ! has_filter( 'yay_currency_woocommerce_currency_symbol', array( $this, 'yay_currency_woocommerce_currency_symbol_default' ) ) ) {
+                    add_filter( 'yay_currency_woocommerce_currency_symbol', array( $this, 'yay_currency_woocommerce_currency_symbol_default' ), 9999, 3 );
+                }
+
+                if ( ! has_filter( 'yay_currency_is_original_default_currency', array( $this, 'yay_currency_is_original_default_currency_for_pwgc' ) ) ) {
+                    add_filter( 'yay_currency_is_original_default_currency', array( $this, 'yay_currency_is_original_default_currency_for_pwgc' ), 9999, 2 );
+                }
+            }
         }
 
         // Currency Switcher for WooCommerce by WP Wham
@@ -955,6 +990,105 @@ define( 'PWGC_VERSION', '2.43' );
             }
 
             return $currency;
+        }
+
+        function pwgc_get_store_currency_code() {
+            return get_option( 'woocommerce_currency' );
+        }
+
+        function pwgc_get_store_currency_symbol() {
+            $default_currency_code = $this->pwgc_get_store_currency_code();
+
+            if ( class_exists( 'Yay_Currency\Helpers\YayCurrencyHelper' ) ) {
+                $default_currency = Yay_Currency\Helpers\YayCurrencyHelper::get_currency_by_currency_code( $default_currency_code );
+
+                if ( is_array( $default_currency ) && ! empty( $default_currency['symbol'] ) ) {
+                    return $default_currency['symbol'];
+                }
+            }
+
+            $symbols = get_woocommerce_currency_symbols();
+
+            if ( isset( $symbols[ $default_currency_code ] ) ) {
+                return $symbols[ $default_currency_code ];
+            }
+
+            return '';
+        }
+
+        function pwgc_force_default_woocommerce_currency( $currency ) {
+            if ( ! $this->pwgc_force_default_currency ) {
+                return $currency;
+            }
+
+            return $this->pwgc_get_store_currency_code();
+        }
+
+        function pwgc_force_default_woocommerce_currency_symbol( $symbol, $currency = '' ) {
+            if ( ! $this->pwgc_force_default_currency ) {
+                return $symbol;
+            }
+
+            $store_symbol = $this->pwgc_get_store_currency_symbol();
+
+            return $store_symbol ? $store_symbol : $symbol;
+        }
+
+        function yay_currency_get_default_currency() {
+            static $default_currency = null;
+
+            if ( null === $default_currency && class_exists( 'Yay_Currency\Helpers\YayCurrencyHelper' ) && class_exists( 'Yay_Currency\Helpers\Helper' ) ) {
+                $default_currency_code = $this->pwgc_get_store_currency_code();
+                $default_currency = Yay_Currency\Helpers\YayCurrencyHelper::get_currency_by_currency_code( $default_currency_code );
+
+                if ( ! is_array( $default_currency ) || empty( $default_currency['currency'] ) ) {
+                    $default_currency = false;
+                }
+            }
+
+            return $default_currency;
+        }
+
+        function yay_currency_default_currency( $apply_currency ) {
+            if ( ! $this->pwgc_force_default_currency ) {
+                return $apply_currency;
+            }
+
+            $default_currency = $this->yay_currency_get_default_currency();
+
+            return $default_currency ? $default_currency : $apply_currency;
+        }
+
+        function yay_currency_woocommerce_currency_default( $currency_code, $is_dis_checkout_diff_currency ) {
+            if ( ! $this->pwgc_force_default_currency ) {
+                return $currency_code;
+            }
+
+            $default_currency = $this->yay_currency_get_default_currency();
+
+            return $default_currency ? $default_currency['currency'] : $currency_code;
+        }
+
+        function yay_currency_woocommerce_currency_symbol_default( $currency_symbol, $currency, $current_currency ) {
+            if ( ! $this->pwgc_force_default_currency ) {
+                return $currency_symbol;
+            }
+
+            $default_currency = $this->yay_currency_get_default_currency();
+
+            if ( $default_currency && ! empty( $default_currency['symbol'] ) ) {
+                return $default_currency['symbol'];
+            }
+
+            return $currency_symbol;
+        }
+
+        function yay_currency_is_original_default_currency_for_pwgc( $flag, $apply_currency ) {
+            if ( $this->pwgc_force_default_currency ) {
+                return true;
+            }
+
+            return $flag;
         }
 
         function wcumcs_custom_item_price_final( $final_price, $price, $product ) {

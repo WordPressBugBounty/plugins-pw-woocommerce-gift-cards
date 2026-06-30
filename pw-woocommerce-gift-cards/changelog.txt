@@ -1,3 +1,6 @@
+= 2.44 =
+* Optional minimum payment amount when redeeming gift cards. Full-balance zero checkout bypasses the minimum. Other bug fixes. Additional YayCurrency integration for gift cards. Fix YayCommerce currency symbol in admin dashboard. Integration for PayPal v. 4.1.0. Other bug fixes. Confirmed compatibility with WooCommerce 10.9.
+
 = 2.43 =
 * Fix PHP 8.4 fatal when summing gift card amounts on orders.
 

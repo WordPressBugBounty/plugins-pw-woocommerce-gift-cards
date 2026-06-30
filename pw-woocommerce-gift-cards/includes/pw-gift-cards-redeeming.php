@@ -194,27 +194,34 @@ final class PW_Gift_Cards_Redeeming {
         // This is where we could optionally exclude Gift Cards, Shipping amounts, etc.
         $eligible_amount = apply_filters( 'pwgc_eligible_cart_amount', $cart->total, $cart );
 
-        // Sum all the gift card amounts (with a sanity check for good measure).
-        $gift_card_total = 0;
+        $gift_cards = array();
         foreach ( $session_data['gift_cards'] as $card_number => $amount ) {
             $pw_gift_card = new PW_Gift_Card( $card_number );
             if ( $pw_gift_card->get_id() ) {
-
                 $gift_card_blocked = apply_filters( 'pwgc_gift_card_blocked', false, $card_number );
-
-                $amount = 0;
-                if ( !$pw_gift_card->has_expired() && !$gift_card_blocked) {
-                    $gift_card_balance = apply_filters( 'pwgc_to_current_currency', $pw_gift_card->get_balance() );
-                    if ( $gift_card_balance < ( $eligible_amount - $gift_card_total ) ) {
-                        $amount = $gift_card_balance;
-                    } else {
-                        $amount = ( $eligible_amount - $gift_card_total );
-                    }
+                if ( !$pw_gift_card->has_expired() && !$gift_card_blocked ) {
+                    $gift_cards[] = $pw_gift_card;
                 }
-
-                $session_data['gift_cards'][ $card_number ] = $amount;
-                $gift_card_total += $amount;
             }
+        }
+
+        $eligible_before_minimum_cap = $eligible_amount;
+        $eligible_amount = pwgc_cap_eligible_amount_for_minimum_payment( $eligible_amount, $cart, $gift_cards );
+        $cart->pwgc_redeem_capped_for_minimum_payment = ( $eligible_amount + 0.00001 < $eligible_before_minimum_cap );
+
+        // Sum all the gift card amounts (with a sanity check for good measure).
+        $gift_card_total = 0;
+        foreach ( $gift_cards as $pw_gift_card ) {
+            $amount = 0;
+            $gift_card_balance = apply_filters( 'pwgc_to_current_currency', $pw_gift_card->get_balance() );
+            if ( $gift_card_balance < ( $eligible_amount - $gift_card_total ) ) {
+                $amount = $gift_card_balance;
+            } else {
+                $amount = ( $eligible_amount - $gift_card_total );
+            }
+
+            $session_data['gift_cards'][ $pw_gift_card->get_number() ] = $amount;
+            $gift_card_total += $amount;
 
             if ( $gift_card_total >= $eligible_amount ) {
                 break;
@@ -269,6 +276,39 @@ final class PW_Gift_Cards_Redeeming {
         return $new_total;
     }
 
+    /**
+     * Set the payable order total after gift card redemption without calling calculate_totals().
+     * Full recalculation can strip shipping tax from payment gateway amount breakdowns.
+     *
+     * @param WC_Order $order
+     * @param bool     $save   Whether to persist the order after updating the total.
+     * @return bool True when the order total was updated.
+     */
+    function set_order_total_after_gift_cards( $order, $save = true ) {
+        if ( ! is_a( $order, 'WC_Order' ) || ! $order->get_items( 'pw_gift_card' ) ) {
+            return false;
+        }
+
+        $gift_card_total = 0;
+
+        foreach ( $order->get_items( 'pw_gift_card' ) as $line ) {
+            $gift_card_total += floatval( apply_filters( 'pwgc_to_order_currency', $line->get_amount(), $order ) );
+        }
+
+        if ( $gift_card_total <= 0 ) {
+            return false;
+        }
+
+        $order_total = $this->calculate_order_total( $order );
+        $order->set_total( max( 0, $order_total - $gift_card_total ) );
+
+        if ( $save ) {
+            $order->save();
+        }
+
+        return true;
+    }
+
     // Ensure we have the right total, even after recalculations and such.
     function woocommerce_update_order( $order_id ) {
         remove_action( 'woocommerce_update_order', array( $this, 'woocommerce_update_order' ) );
@@ -278,32 +318,13 @@ final class PW_Gift_Cards_Redeeming {
             return;
         }
 
-        $gift_card_total = 0;
-
-        foreach( $order->get_items( 'pw_gift_card' ) as $line ) {
-            $gift_card_total += floatval( apply_filters( 'pwgc_to_order_currency', $line->get_amount(), $order ) );
-        }
-
-        if ( $gift_card_total > 0 ) {
-
-            $order_total = $this->calculate_order_total( $order );
-            $order->set_total( max( 0, $order_total - $gift_card_total ) );
-            $order->save();
-        }
+        $this->set_order_total_after_gift_cards( $order );
 
         add_action( 'woocommerce_update_order', array( $this, 'woocommerce_update_order' ) );
     }
 
     function woocommerce_order_after_calculate_totals( $and_taxes, $order ) {
-        $gift_card_total = 0;
-
-        foreach( $order->get_items( 'pw_gift_card' ) as $line ) {
-            $gift_card_total += floatval( apply_filters( 'pwgc_to_order_currency', $line->get_amount(), $order ) );
-        }
-
-        if ( $gift_card_total > 0 ) {
-            $order->set_total( max( 0, $order->get_total() - $gift_card_total ) );
-        }
+        $this->set_order_total_after_gift_cards( $order, false );
     }
 
     function woocommerce_pre_payment_complete( $order_id ) {
@@ -396,14 +417,15 @@ final class PW_Gift_Cards_Redeeming {
     }
 
     /**
-     * Check if a redemption has already been processed for this order/item combination.
-     * This provides database-level idempotency checking to prevent duplicate debits.
+     * Check if a redemption is currently active for this order/item combination.
+     * Uses net activity (debits minus credits) so a failed/cancelled/refunded order
+     * that credited the card back does not block re-debit when payment succeeds.
      *
      * @param int $gift_card_id The gift card ID
      * @param int $order_id The order ID
      * @param int $order_item_id The order item ID
      * @param float $amount The redemption amount (for additional verification)
-     * @return bool True if redemption already exists, false otherwise
+     * @return bool True if net redemption matches the line amount, false otherwise
      */
     private function has_redemption_been_processed( $gift_card_id, $order_id, $order_item_id, $amount ) {
         global $wpdb;
@@ -414,31 +436,24 @@ final class PW_Gift_Cards_Redeeming {
         $order_item_pattern = "order_item_id: $order_item_id";
 
         // Amount with tolerance for floating point comparisons (convert to negative for debit)
-        $debit_amount = floatval( $amount ) * -1;
+        $expected_debit = floatval( $amount ) * -1;
         $amount_tolerance = 0.01;
 
-        // Check if a debit transaction already exists for this combination
-        // This query will find any existing debit for this order/item, regardless of which hook triggered it
-        $existing = $wpdb->get_var( $wpdb->prepare( "
-            SELECT COUNT(*)
+        $net_amount = $wpdb->get_var( $wpdb->prepare( "
+            SELECT COALESCE( SUM( amount ), 0 )
             FROM {$wpdb->pimwick_gift_card_activity}
             WHERE pimwick_gift_card_id = %d
             AND action = 'transaction'
             AND amount IS NOT NULL
-            AND amount < 0
             AND note LIKE %s
             AND note LIKE %s
-            AND ABS(amount - %f) < %f
-            LIMIT 1
         ",
             $gift_card_id,
             '%' . $wpdb->esc_like( $order_id_pattern ) . '%',
-            '%' . $wpdb->esc_like( $order_item_pattern ) . '%',
-            $debit_amount,
-            $amount_tolerance
+            '%' . $wpdb->esc_like( $order_item_pattern ) . '%'
         ) );
 
-        return ( $existing > 0 );
+        return ( floatval( $net_amount ) <= ( $expected_debit + $amount_tolerance ) );
     }
 
     function credit_gift_cards( $order_id, $order, $note ) {
@@ -539,12 +554,9 @@ final class PW_Gift_Cards_Redeeming {
             }
         }
 
-        // Recalculate totals so order->get_total() reflects gift card reduction before process_payment runs.
-        // Without this, gateways (e.g. Stripe) may charge the full pre-gift-card amount.
-        if ( $order->get_items( 'pw_gift_card' ) ) {
-            $order->calculate_totals();
-            $order->save();
-        }
+        // Set the payable total before process_payment without calculate_totals(), which can
+        // drop shipping tax from payment gateway amount breakdowns.
+        $this->set_order_total_after_gift_cards( $order );
     }
 
     function woocommerce_proceed_to_checkout() {
@@ -650,6 +662,11 @@ final class PW_Gift_Cards_Redeeming {
             }
 
             wc_add_notice( __( 'Gift card applied.', 'pw-woocommerce-gift-cards' ) );
+
+            if ( isset( WC()->cart ) ) {
+                WC()->cart->calculate_totals();
+                pwgc_maybe_add_minimum_payment_redemption_notice( WC()->cart );
+            }
 
             wp_send_json_success();
         } else {

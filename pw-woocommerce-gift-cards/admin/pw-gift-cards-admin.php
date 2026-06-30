@@ -138,6 +138,24 @@ final class PW_Gift_Cards_Admin {
                 'type'    => 'checkbox',
             ),
             array(
+                'title'   => __( 'Minimum payment amount', 'pw-woocommerce-gift-cards' ),
+                'desc'    => __( 'When enabled, gift cards are only applied up to the amount that leaves this minimum remaining on the order. Orders fully covered by gift card balance (zero due) are not limited. Useful when a payment gateway requires a minimum charge. Default: Unchecked.', 'pw-woocommerce-gift-cards' ),
+                'id'      => 'pwgc_minimum_payment_amount_enabled',
+                'default' => 'no',
+                'type'    => 'checkbox',
+            ),
+            array(
+                'title'             => __( 'Minimum payment amount value', 'pw-woocommerce-gift-cards' ),
+                'desc'              => __( 'Remaining order total required for payment gateway checkout, in store currency.', 'pw-woocommerce-gift-cards' ),
+                'id'                => 'pwgc_minimum_payment_amount',
+                'default'           => '',
+                'type'              => 'number',
+                'custom_attributes' => array(
+                    'min'  => '0',
+                    'step' => 'any',
+                ),
+            ),
+            array(
                 'title'   => __( 'Wrap admin action buttons', 'pw-woocommerce-gift-cards' ),
                 'desc'    => __( 'On the Search results grid, allow action buttons in the last column to wrap to a new line instead of forcing horizontal scrolling. Default: Unchecked.', 'pw-woocommerce-gift-cards' ),
                 'id'      => 'pwgc_wrap_admin_action_buttons',
@@ -267,6 +285,10 @@ final class PW_Gift_Cards_Admin {
     }
 
     function index() {
+        global $pw_gift_cards;
+
+        $pw_gift_cards->set_current_currency_to_default();
+
         require( 'ui/index.php' );
     }
 
