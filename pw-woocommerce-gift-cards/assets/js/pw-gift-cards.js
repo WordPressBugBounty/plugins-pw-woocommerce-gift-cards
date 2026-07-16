@@ -13,14 +13,16 @@ function pwgc_init() {
     });
     pwgc_message_characters_remaining();
 
-    jQuery('form.variations_form').on('show_variation', function() {
-        jQuery('#pwgc-purchase-container').show();
-        pwgc_toggle_quantity();
+    var giftCardVariationForm = jQuery('form.variations_form:has(#pwgc-to)');
+
+    giftCardVariationForm.on('show_variation', function() {
+        jQuery(this).find('#pwgc-purchase-container').show();
+        pwgc_toggle_quantity(this);
     });
 
-    jQuery('form.variations_form').on('hide_variation', function() {
-        jQuery('#pwgc-purchase-container').hide();
-        pwgc_toggle_quantity();
+    giftCardVariationForm.on('hide_variation', function() {
+        jQuery(this).find('#pwgc-purchase-container').hide();
+        pwgc_toggle_quantity(this);
     });
 
     jQuery('#pwgc-to').on('blur', function() {
@@ -39,30 +41,33 @@ function pwgc_init() {
         pwgc_toggle_quantity();
     });
 
-    jQuery('.variations_form').on( 'found_variation.wc-variation-form', function() {
-        pwgc_toggle_quantity();
+    giftCardVariationForm.on( 'found_variation.wc-variation-form', function() {
+        pwgc_toggle_quantity(this);
     });
 
-    jQuery('.variations_form').on( 'reset_data', function() {
-        pwgc_toggle_quantity();
+    giftCardVariationForm.on( 'reset_data', function() {
+        pwgc_toggle_quantity(this);
     });
 
-    jQuery('.variations_form').on( 'submit', function(e) {
-        if (jQuery('#pwgc-to').length) {
-            var recipients = jQuery('#pwgc-to').val().split(/[ ,]+/);
-            var badRecipients = [];
+    giftCardVariationForm.on( 'submit', function(e) {
+        var pwgcTo = jQuery(this).find('#pwgc-to');
+        if (!pwgcTo.length) {
+            return;
+        }
 
-            for (var i = 0; i < recipients.length; i++) {
-                if (!pwgc_is_email(recipients[i])) {
-                    badRecipients.push(recipients[i]);
-                }
-            }
+        var recipients = pwgcTo.val().split(/[ ,]+/);
+        var badRecipients = [];
 
-            if (badRecipients.length) {
-                alert(pwgc.i18n.invalid_recipient_error + '\n\n' + badRecipients.join('\n'));
-                e.preventDefault();
-                return false;
+        for (var i = 0; i < recipients.length; i++) {
+            if (!pwgc_is_email(recipients[i])) {
+                badRecipients.push(recipients[i]);
             }
+        }
+
+        if (badRecipients.length) {
+            alert(pwgc.i18n.invalid_recipient_error + '\n\n' + badRecipients.join('\n'));
+            e.preventDefault();
+            return false;
         }
     });
 
@@ -96,18 +101,23 @@ function pwgc_is_email(email) {
     return regex.test(email);
 }
 
-function pwgc_toggle_quantity() {
-    if (jQuery('#pwgc-to').length) {
-        var recipients = jQuery('#pwgc-to').val().split(/[ ,]+/);
-        if (recipients.length > 1) {
-            jQuery('#pwgc-recipient-count').text(recipients.length);
-            jQuery('#pwgc-quantity-one-per-recipient').show();
-            jQuery('input.qty').val('1');
-            jQuery('.quantity').hide();
-        } else {
-            jQuery('#pwgc-quantity-one-per-recipient').hide();
-            jQuery('.quantity').show();
-        }
+function pwgc_toggle_quantity(form) {
+    var giftCardForm = form ? jQuery(form) : jQuery('form.variations_form:has(#pwgc-to)').first();
+    var pwgcTo = giftCardForm.find('#pwgc-to');
+
+    if (!pwgcTo.length) {
+        return;
+    }
+
+    var recipients = pwgcTo.val().split(/[ ,]+/);
+    if (recipients.length > 1) {
+        jQuery('#pwgc-recipient-count').text(recipients.length);
+        jQuery('#pwgc-quantity-one-per-recipient').show();
+        giftCardForm.find('input.qty').val('1');
+        giftCardForm.find('.quantity').hide();
+    } else {
+        jQuery('#pwgc-quantity-one-per-recipient').hide();
+        giftCardForm.find('.quantity').show();
     }
 }
 

@@ -5,7 +5,7 @@ Tags: woocommerce, gift cards, gift certificates, vouchers, store credit
 Requires at least: 4.5
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 2.44
+Stable tag: 2.45
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,6 +103,9 @@ The following currency switcher plugins are supported:
 
 == Changelog ==
 
+= 2.45 =
+* Fix gift card JS interfering with non-gift-card variable product add-to-cart. Fix custom amount query string parsing for European number formats. Fix gift card rounding residual on zero-total orders.
+
 = 2.44 =
 * Optional minimum payment amount when redeeming gift cards. Full-balance zero checkout bypasses the minimum. Other bug fixes. Additional YayCurrency integration for gift cards. Fix YayCommerce currency symbol in admin dashboard. Integration for PayPal v. 4.1.0. Other bug fixes. Confirmed compatibility with WooCommerce 10.9.
 
@@ -130,15 +133,12 @@ The following currency switcher plugins are supported:
 = 2.36 =
 * Minor compatibility fix.
 
-= 2.35 =
-* Blocks updates for Express Payment options.
-
 = Previous versions =
 * See changelog.txt
 
 == Upgrade Notice ==
 
-= 2.44 =
-* Optional minimum payment amount when redeeming gift cards. Full-balance zero checkout bypasses the minimum. Other bug fixes. Additional YayCurrency integration for gift cards. Fix YayCommerce currency symbol in admin dashboard. Integration for PayPal v. 4.1.0. Other bug fixes. Confirmed compatibility with WooCommerce 10.9.
+= 2.45 =
+* Fix gift card JS interfering with non-gift-card variable product add-to-cart. Fix custom amount query string parsing for European number formats. Fix gift card rounding residual on zero-total orders.
 
 

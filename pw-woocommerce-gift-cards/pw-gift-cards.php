@@ -3,7 +3,7 @@
  * Plugin Name: PW WooCommerce Gift Cards
  * Plugin URI: https://www.pimwick.com/gift-cards/
  * Description: Sell gift cards in your WooCommerce store.
- * Version: 2.44
+ * Version: 2.45
  * Author: Pimwick, LLC
  * Author URI: https://www.pimwick.com
  * Text Domain: pw-woocommerce-gift-cards
@@ -110,7 +110,7 @@ add_action( 'plugins_loaded', function() {
         return;
     }
 
-define( 'PWGC_VERSION', '2.44' );
+define( 'PWGC_VERSION', '2.45' );
 
     load_plugin_textdomain( 'pw-woocommerce-gift-cards', false, basename( dirname( __FILE__ ) ) . '/languages' );
 
@@ -452,8 +452,26 @@ define( 'PWGC_VERSION', '2.44' );
             $decimal_separator = wc_get_price_decimal_separator();
 
             $amount = strip_tags( html_entity_decode( $amount ) );
-            $amount = str_replace( $thousand_separator, '', $amount );
-            $amount = str_replace( $decimal_separator, '.', $amount );
+
+            if ( false !== strpos( $amount, $decimal_separator ) ) {
+                $amount = str_replace( $thousand_separator, '', $amount );
+                $amount = str_replace( $decimal_separator, '.', $amount );
+            } else {
+                $strip_thousands = true;
+
+                // Query strings and APIs often use international decimal notation (e.g. 50.50)
+                // even when the store uses a comma decimal separator.
+                if ( '.' === $thousand_separator && ',' === $decimal_separator && 1 === substr_count( $amount, '.' ) ) {
+                    $decimals = wc_get_price_decimals();
+                    if ( preg_match( '/\.\d{1,' . max( 1, absint( $decimals ) ) . '}$/', $amount ) ) {
+                        $strip_thousands = false;
+                    }
+                }
+
+                if ( $strip_thousands && $thousand_separator ) {
+                    $amount = str_replace( $thousand_separator, '', $amount );
+                }
+            }
 
             return apply_filters( 'pwgc_sanitize_amount', $amount );
         }

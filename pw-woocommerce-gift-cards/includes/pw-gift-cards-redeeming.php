@@ -300,7 +300,17 @@ final class PW_Gift_Cards_Redeeming {
         }
 
         $order_total = $this->calculate_order_total( $order );
-        $order->set_total( max( 0, $order_total - $gift_card_total ) );
+        $remaining   = $order_total - $gift_card_total;
+
+        // Cart grand-total rounding and per-line order recalculation can diverge by a
+        // single currency unit (e.g. tax-inclusive multi-line carts). Snap that residual
+        // to zero so a gift card that should fully cover the order does not leave 0.01 due.
+        $epsilon = 1 / pow( 10, wc_get_price_decimals() );
+        if ( $remaining > 0 && $remaining < $epsilon ) {
+            $remaining = 0;
+        }
+
+        $order->set_total( max( 0, $remaining ) );
 
         if ( $save ) {
             $order->save();
@@ -893,8 +903,9 @@ final class PW_Gift_Cards_Redeeming {
             // Calculate the effective total after gift cards.
             $effective_total = $order_total - $gift_card_total;
 
-            // If the effective total is zero or less, payment is not needed.
-            if ( $effective_total <= 0 ) {
+            // Treat a sub-cent residual (cart vs order rounding mismatch) as fully covered.
+            $epsilon = 1 / pow( 10, wc_get_price_decimals() );
+            if ( $effective_total < $epsilon ) {
                 return false;
             }
         }
