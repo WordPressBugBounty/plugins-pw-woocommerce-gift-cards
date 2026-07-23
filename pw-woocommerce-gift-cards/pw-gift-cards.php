@@ -3,7 +3,7 @@
  * Plugin Name: PW WooCommerce Gift Cards
  * Plugin URI: https://www.pimwick.com/gift-cards/
  * Description: Sell gift cards in your WooCommerce store.
- * Version: 2.45
+ * Version: 2.46
  * Author: Pimwick, LLC
  * Author URI: https://www.pimwick.com
  * Text Domain: pw-woocommerce-gift-cards
@@ -110,7 +110,7 @@ add_action( 'plugins_loaded', function() {
         return;
     }
 
-define( 'PWGC_VERSION', '2.45' );
+define( 'PWGC_VERSION', '2.46' );
 
     load_plugin_textdomain( 'pw-woocommerce-gift-cards', false, basename( dirname( __FILE__ ) ) . '/languages' );
 
@@ -765,11 +765,11 @@ define( 'PWGC_VERSION', '2.45' );
             }
 
             // YayCurrency Pro for WooCommerce by YayCommerce
-            if ( class_exists( 'Yay_Currency\Helpers\YayCurrencyHelper' ) && class_exists( 'Yay_Currency\Helpers\Helper' ) ) {
+            if ( class_exists( 'Yay_Currency\Helpers\YayCurrencyHelper' ) && class_exists( 'Yay_Currency\Helpers\Helper' ) && method_exists( 'Yay_Currency\Helpers\YayCurrencyHelper', 'reverse_calculate_price_by_currency' ) ) {
                 $default_currency_code = Yay_Currency\Helpers\Helper::default_currency_code();
                 $apply_currency = Yay_Currency\Helpers\YayCurrencyHelper::detect_current_currency();
-                if ( $default_currency_code !== $apply_currency ) {
-                    $amount = Yay_Currency\Helpers\YayCurrencyHelper::calculate_price_by_currency( $amount, false, $default_currency_code );
+                if ( is_array( $apply_currency ) && isset( $apply_currency['currency'] ) && $default_currency_code !== $apply_currency['currency'] ) {
+                    $amount = Yay_Currency\Helpers\YayCurrencyHelper::reverse_calculate_price_by_currency( $amount, $apply_currency );
                 }
             }
 
@@ -873,10 +873,10 @@ define( 'PWGC_VERSION', '2.45' );
             }
 
             // YayCurrency Pro for WooCommerce by YayCommerce
-            if ( class_exists( 'Yay_Currency\Helpers\YayCurrencyHelper' ) && class_exists( 'Yay_Currency\Helpers\Helper' ) ) {
+            if ( class_exists( 'Yay_Currency\Helpers\YayCurrencyHelper' ) && class_exists( 'Yay_Currency\Helpers\Helper' ) && is_a( $order, 'WC_Order' ) ) {
                 $default_currency_code = Yay_Currency\Helpers\Helper::default_currency_code();
-                $apply_currency = Yay_Currency\Helpers\YayCurrencyHelper::detect_current_currency();
-                if ( $default_currency_code !== $apply_currency ) {
+                $apply_currency = Yay_Currency\Helpers\YayCurrencyHelper::get_currency_by_currency_code( $order->get_currency() );
+                if ( is_array( $apply_currency ) && isset( $apply_currency['currency'] ) && $default_currency_code !== $apply_currency['currency'] ) {
                     $amount = Yay_Currency\Helpers\YayCurrencyHelper::calculate_price_by_currency( $amount, false, $apply_currency );
                 }
             }
