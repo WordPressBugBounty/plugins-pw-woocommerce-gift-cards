@@ -1,3 +1,6 @@
+= 2.47 =
+* Prevent duplicate gift cards when order completion runs concurrently.
+
 = 2.46 =
 * YayCurrency compatibility issue fix.
 

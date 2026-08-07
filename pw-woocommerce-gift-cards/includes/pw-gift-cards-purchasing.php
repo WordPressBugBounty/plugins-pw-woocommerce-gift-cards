@@ -325,48 +325,62 @@ final class PW_Gift_Cards_Purchasing {
             }
             $item_note = $note . ", order_item_id: $order_item_id";
 
-            // Use wc_add_order_item_meta with $unique=true as an atomic check-and-set operation.
-            // If the meta key already exists, this will return false and we skip to prevent duplicates.
-            $meta_id = wc_add_order_item_meta( $order_item_id, PWGC_GIFT_CARDS_CREATED_META_KEY, 'yes', true );
-            if ( false === $meta_id ) {
-                // Gift cards have already been created for this order item, skip to prevent duplicates.
+            global $wpdb;
+
+            // Skip if already processed (handles multiple hooks in same or different requests).
+            if ( wc_get_order_item_meta( $order_item_id, PWGC_GIFT_CARDS_CREATED_META_KEY ) ) {
                 continue;
             }
 
-            // Create a gift card for each quantity ordered.
-            $gift_card_numbers = (array) wc_get_order_item_meta( $order_item_id, PWGC_GIFT_CARD_NUMBER_META_KEY, false );
-
-            // Make sure any existing gift cards are activated.
-            foreach ( $gift_card_numbers as $gift_card_number ) {
-                $gift_card = new PW_Gift_Card( $gift_card_number );
-                $gift_card->reactivate( $item_note );
-            }
-
-            $existing_count = count( $gift_card_numbers );
-            $required_quantity = absint( $order_item['quantity'] );
-
-            // If we already have the required number of gift cards, we're done.
-            // This handles cases where cards were created but the meta key wasn't set (e.g., from a previous version).
-            if ( $existing_count >= $required_quantity ) {
+            // Use a MySQL advisory lock to serialize gift card creation per order item.
+            // Prevents duplicates when payment gateway callback and browser redirect complete the order concurrently.
+            $lock_key = 'pwgc_create_' . absint( $order_item_id );
+            $acquired = $wpdb->get_var( $wpdb->prepare( "SELECT GET_LOCK(%s, 10)", $lock_key ) );
+            if ( $acquired != '1' ) {
+                // Could not obtain the lock; assume another request is handling creation.
                 continue;
             }
 
-            // Create any new/missing gift cards.
-            for ( $x = $existing_count; $x < $required_quantity; $x++ ) {
-
-                $gift_card = PW_Gift_Card::create_card( $create_note, $product_id );
-
-                if ( ! is_a( $gift_card, 'PW_Gift_Card' ) ) {
-                    if ( is_string( $gift_card ) ) {
-                        throw new Exception( __( 'Error while creating gift card: ' . $gift_card ) );
-                    } else {
-                        throw new Exception( __( 'Unknown error while creating gift card.' ) );
-                    }
+            try {
+                // Re-check under the lock to avoid race conditions between concurrent requests.
+                if ( wc_get_order_item_meta( $order_item_id, PWGC_GIFT_CARDS_CREATED_META_KEY ) ) {
+                    continue;
                 }
 
-                $gift_card->credit( $credit_amount, $item_note );
+                // Create a gift card for each quantity ordered.
+                $gift_card_numbers = (array) wc_get_order_item_meta( $order_item_id, PWGC_GIFT_CARD_NUMBER_META_KEY, false );
 
-                wc_add_order_item_meta( $order_item_id, PWGC_GIFT_CARD_NUMBER_META_KEY, $gift_card->get_number() );
+                // Make sure any existing gift cards are activated.
+                foreach ( $gift_card_numbers as $gift_card_number ) {
+                    $gift_card = new PW_Gift_Card( $gift_card_number );
+                    $gift_card->reactivate( $item_note );
+                }
+
+                $existing_count = count( $gift_card_numbers );
+                $required_quantity = absint( $order_item['quantity'] );
+
+                // Create any new/missing gift cards.
+                // Also covers legacy cases where cards exist but the created meta key was never set.
+                for ( $x = $existing_count; $x < $required_quantity; $x++ ) {
+
+                    $gift_card = PW_Gift_Card::create_card( $create_note, $product_id );
+
+                    if ( ! is_a( $gift_card, 'PW_Gift_Card' ) ) {
+                        if ( is_string( $gift_card ) ) {
+                            throw new Exception( __( 'Error while creating gift card: ' . $gift_card ) );
+                        } else {
+                            throw new Exception( __( 'Unknown error while creating gift card.' ) );
+                        }
+                    }
+
+                    $gift_card->credit( $credit_amount, $item_note );
+
+                    wc_add_order_item_meta( $order_item_id, PWGC_GIFT_CARD_NUMBER_META_KEY, $gift_card->get_number() );
+                }
+
+                wc_update_order_item_meta( $order_item_id, PWGC_GIFT_CARDS_CREATED_META_KEY, 'yes' );
+            } finally {
+                $wpdb->query( $wpdb->prepare( "SELECT RELEASE_LOCK(%s)", $lock_key ) );
             }
 
             // Refresh the cache so that the gift card number is immediately available for the New Order email.

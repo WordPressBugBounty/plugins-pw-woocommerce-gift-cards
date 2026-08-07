@@ -5,7 +5,7 @@ Tags: woocommerce, gift cards, gift certificates, vouchers, store credit
 Requires at least: 4.5
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 2.46
+Stable tag: 2.47
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,6 +103,9 @@ The following currency switcher plugins are supported:
 
 == Changelog ==
 
+= 2.47 =
+* Prevent duplicate gift cards when order completion runs concurrently.
+
 = 2.46 =
 * YayCurrency compatibility issue fix.
 
@@ -130,15 +133,12 @@ The following currency switcher plugins are supported:
 = 2.38 =
 * Additional order logic for payment gateway integration.
 
-= 2.37 =
-* Other bug fixes.
-
 = Previous versions =
 * See changelog.txt
 
 == Upgrade Notice ==
 
-= 2.46 =
-* YayCurrency compatibility issue fix.
+= 2.47 =
+* Prevent duplicate gift cards when order completion runs concurrently.
 
 
