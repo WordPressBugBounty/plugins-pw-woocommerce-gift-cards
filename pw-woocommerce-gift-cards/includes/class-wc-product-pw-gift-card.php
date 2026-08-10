@@ -180,15 +180,17 @@ class WC_Product_PW_Gift_Card extends WC_Product_Variable {
             $index++;
 
             // Ensure that the attributes are correct on the variations.
+            // Use 'edit' context so currency plugins (e.g. YayCurrency) cannot convert the stored price.
             $variation_attributes = $variation->get_attributes();
-            $variation_attributes[ PWGC_DENOMINATION_ATTRIBUTE_SLUG ] = $pw_gift_cards->pretty_price( $variation->get_regular_price() );
+            $variation_attributes[ PWGC_DENOMINATION_ATTRIBUTE_SLUG ] = $pw_gift_cards->pretty_price( $variation->get_regular_price( 'edit' ) );
             $variation->set_attributes( $variation_attributes );
             $variation->save();
         }
 
         $options = array();
         foreach ( $variations as $variation ) {
-            $price = apply_filters( 'pwgc_to_default_currency', $variation->get_regular_price() );
+            // Stored variation prices are already in the store currency; do not run currency conversion.
+            $price = $variation->get_regular_price( 'edit' );
             if ( !in_array( $price, $options ) && $price > 0 ) {
                 $options[] = $price;
             }
