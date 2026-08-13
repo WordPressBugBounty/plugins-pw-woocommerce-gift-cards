@@ -1,3 +1,6 @@
+= 2.49 =
+* Small bug fix for YayCurrency integration. Minor bug fix.
+
 = 2.48 =
 * Additional integration for YayCurrency.
 

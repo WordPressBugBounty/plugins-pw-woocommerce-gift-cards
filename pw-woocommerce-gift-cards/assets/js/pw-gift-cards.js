@@ -13,7 +13,7 @@ function pwgc_init() {
     });
     pwgc_message_characters_remaining();
 
-    var giftCardVariationForm = jQuery('form.variations_form:has(#pwgc-to)');
+    var giftCardVariationForm = jQuery('form.variations_form:has(#pwgc-purchase-container)');
 
     giftCardVariationForm.on('show_variation', function() {
         jQuery(this).find('#pwgc-purchase-container').show();
@@ -102,7 +102,7 @@ function pwgc_is_email(email) {
 }
 
 function pwgc_toggle_quantity(form) {
-    var giftCardForm = form ? jQuery(form) : jQuery('form.variations_form:has(#pwgc-to)').first();
+    var giftCardForm = form ? jQuery(form) : jQuery('form.variations_form:has(#pwgc-purchase-container)').first();
     var pwgcTo = giftCardForm.find('#pwgc-to');
 
     if (!pwgcTo.length) {

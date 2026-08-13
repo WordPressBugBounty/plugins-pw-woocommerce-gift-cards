@@ -320,6 +320,10 @@ final class PW_Gift_Cards_Purchasing {
 
                 // Aelia Currency Switcher
                 && !class_exists( 'WC_Aelia_CurrencySwitcher' )
+
+                // YayCurrency Pro for WooCommerce by YayCommerce
+                // Amount meta is already stored in store currency at checkout; converting again double-applies the rate.
+                && ! class_exists( 'Yay_Currency\Helpers\YayCurrencyHelper' )
             ) {
                 $credit_amount = apply_filters( 'pwgc_to_default_currency', $credit_amount );
             }
