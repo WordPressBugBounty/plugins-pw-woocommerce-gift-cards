@@ -3,7 +3,7 @@
  * Plugin Name: PW WooCommerce Gift Cards
  * Plugin URI: https://www.pimwick.com/gift-cards/
  * Description: Sell gift cards in your WooCommerce store.
- * Version: 2.49
+ * Version: 2.50
  * Author: Pimwick, LLC
  * Author URI: https://www.pimwick.com
  * Text Domain: pw-woocommerce-gift-cards
@@ -110,7 +110,7 @@ add_action( 'plugins_loaded', function() {
         return;
     }
 
-define( 'PWGC_VERSION', '2.49' );
+define( 'PWGC_VERSION', '2.50' );
 
     load_plugin_textdomain( 'pw-woocommerce-gift-cards', false, basename( dirname( __FILE__ ) ) . '/languages' );
 
@@ -661,7 +661,8 @@ define( 'PWGC_VERSION', '2.49' );
                 $default_currency_code = Yay_Currency\Helpers\Helper::default_currency_code();
                 $apply_currency = Yay_Currency\Helpers\YayCurrencyHelper::detect_current_currency();
                 if ( is_array( $apply_currency ) && isset( $apply_currency['currency'] ) && $default_currency_code !== $apply_currency['currency'] ) {
-                    $amount = Yay_Currency\Helpers\YayCurrencyHelper::calculate_price_by_currency( $amount, false, $apply_currency );
+                    // $exclude = true skips YayCurrency pretty-price rounding / .99 endings. Gift card balances are money, not display prices.
+                    $amount = Yay_Currency\Helpers\YayCurrencyHelper::calculate_price_by_currency( $amount, true, $apply_currency );
                 }
             }
 
@@ -880,7 +881,8 @@ define( 'PWGC_VERSION', '2.49' );
                 $default_currency_code = Yay_Currency\Helpers\Helper::default_currency_code();
                 $apply_currency = Yay_Currency\Helpers\YayCurrencyHelper::get_currency_by_currency_code( $order->get_currency() );
                 if ( is_array( $apply_currency ) && isset( $apply_currency['currency'] ) && $default_currency_code !== $apply_currency['currency'] ) {
-                    $amount = Yay_Currency\Helpers\YayCurrencyHelper::calculate_price_by_currency( $amount, false, $apply_currency );
+                    // $exclude = true skips YayCurrency pretty-price rounding / .99 endings. Gift card balances are money, not display prices.
+                    $amount = Yay_Currency\Helpers\YayCurrencyHelper::calculate_price_by_currency( $amount, true, $apply_currency );
                 }
             }
 

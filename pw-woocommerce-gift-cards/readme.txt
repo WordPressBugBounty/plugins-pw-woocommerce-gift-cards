@@ -3,9 +3,9 @@ Contributors: pimwick
 Donate link: https://paypal.me/pimwick
 Tags: woocommerce, gift cards, gift certificates, vouchers, store credit
 Requires at least: 4.5
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.49
+Stable tag: 2.50
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,6 +103,9 @@ The following currency switcher plugins are supported:
 
 == Changelog ==
 
+= 2.50 =
+* YayCurrency integration updates. Confirmed compatibility with WordPress 7.1. Additional integration updates for YayCurrency.
+
 = 2.49 =
 * Small bug fix for YayCurrency integration. Minor bug fix.
 
@@ -130,15 +133,12 @@ The following currency switcher plugins are supported:
 = 2.41 =
 * Added gate before loading blocks related js file.
 
-= 2.40 =
-* Minor update for redeeming location in cart and checkout. Wrap admin action buttons option in settings. Fix non-scalar attribute labels to reduce log noise.
-
 = Previous versions =
 * See changelog.txt
 
 == Upgrade Notice ==
 
-= 2.49 =
-* Small bug fix for YayCurrency integration. Minor bug fix.
+= 2.50 =
+* YayCurrency integration updates. Confirmed compatibility with WordPress 7.1. Additional integration updates for YayCurrency.
 
 

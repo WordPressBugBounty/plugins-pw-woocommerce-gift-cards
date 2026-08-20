@@ -48,13 +48,11 @@ foreach( $order->get_items( 'pw_gift_card' ) as $line ) {
                 } else {
                     $args = array();
 
-                    // Multi-Currency for WooCommerce by TIV.NET INC
-                    if ( is_a( $order, 'WC_Order' ) && class_exists( 'WOOMC\App' ) ) {
-                        $args['currency'] = $order->get_currency();
-                    }
-
-                    // Currency Switcher for WooCommerce by WP Wham
-                    if ( is_a( $order, 'WC_Order' ) && function_exists( 'alg_get_current_currency_code' ) ) {
+                    if ( is_a( $order, 'WC_Order' ) && (
+                        class_exists( 'WOOMC\App' )
+                        || function_exists( 'alg_get_current_currency_code' )
+                        || class_exists( 'Yay_Currency\Helpers\YayCurrencyHelper' )
+                    ) ) {
                         $args['currency'] = $order->get_currency();
                     }
 

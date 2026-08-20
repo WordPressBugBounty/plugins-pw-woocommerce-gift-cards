@@ -505,13 +505,11 @@ final class PW_Gift_Cards_Redeeming {
                 $price = apply_filters( 'pwgc_to_order_currency', $gift_card_total * -1, $order );
                 $args = array();
 
-                // Multi-Currency for WooCommerce by TIV.NET INC
-                if ( class_exists( 'WOOMC\App' ) ) {
-                    $args['currency'] = $order->get_currency();
-                }
-
-                // Currency Switcher for WooCommerce by WP Wham
-                if ( is_a( $order, 'WC_Order' ) && function_exists( 'alg_get_current_currency_code' ) ) {
+                if ( is_a( $order, 'WC_Order' ) && (
+                    class_exists( 'WOOMC\App' )
+                    || function_exists( 'alg_get_current_currency_code' )
+                    || class_exists( 'Yay_Currency\Helpers\YayCurrencyHelper' )
+                ) ) {
                     $args['currency'] = $order->get_currency();
                 }
 
@@ -925,13 +923,11 @@ final class PW_Gift_Cards_Redeeming {
             } else {
                 $args = array();
 
-                // Multi-Currency for WooCommerce by TIV.NET INC
-                if ( is_a( $current_order, 'WC_Order' ) && class_exists( 'WOOMC\App' ) ) {
-                    $args['currency'] = $current_order->get_currency();
-                }
-
-                // Currency Switcher for WooCommerce by WP Wham
-                if ( is_a( $current_order, 'WC_Order' ) && function_exists( 'alg_get_current_currency_code' ) ) {
+                if ( is_a( $current_order, 'WC_Order' ) && (
+                    class_exists( 'WOOMC\App' )
+                    || function_exists( 'alg_get_current_currency_code' )
+                    || class_exists( 'Yay_Currency\Helpers\YayCurrencyHelper' )
+                ) ) {
                     $args['currency'] = $current_order->get_currency();
                 }
 

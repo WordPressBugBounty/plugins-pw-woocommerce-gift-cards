@@ -1,3 +1,6 @@
+= 2.50 =
+* YayCurrency integration updates. Confirmed compatibility with WordPress 7.1. Additional integration updates for YayCurrency.
+
 = 2.49 =
 * Small bug fix for YayCurrency integration. Minor bug fix.
 
