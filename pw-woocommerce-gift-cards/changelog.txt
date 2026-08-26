@@ -1,3 +1,6 @@
+= 2.51 =
+* Update to use Font Awesome Free 7.3.1.
+
 = 2.50 =
 * YayCurrency integration updates. Confirmed compatibility with WordPress 7.1. Additional integration updates for YayCurrency.
 

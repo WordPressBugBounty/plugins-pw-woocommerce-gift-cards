@@ -5,7 +5,7 @@ Tags: woocommerce, gift cards, gift certificates, vouchers, store credit
 Requires at least: 4.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.50
+Stable tag: 2.51
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,6 +103,9 @@ The following currency switcher plugins are supported:
 
 == Changelog ==
 
+= 2.51 =
+* Update to use Font Awesome Free 7.3.1.
+
 = 2.50 =
 * YayCurrency integration updates. Confirmed compatibility with WordPress 7.1. Additional integration updates for YayCurrency.
 
@@ -130,15 +133,12 @@ The following currency switcher plugins are supported:
 = 2.42 =
 * Add configurable classic checkout location for applied gift card totals. Confirmed compatibility with WordPress 7.0. More updates for WordPress 7.0. Other bug fixes.
 
-= 2.41 =
-* Added gate before loading blocks related js file.
-
 = Previous versions =
 * See changelog.txt
 
 == Upgrade Notice ==
 
-= 2.50 =
-* YayCurrency integration updates. Confirmed compatibility with WordPress 7.1. Additional integration updates for YayCurrency.
+= 2.51 =
+* Update to use Font Awesome Free 7.3.1.
 
 
