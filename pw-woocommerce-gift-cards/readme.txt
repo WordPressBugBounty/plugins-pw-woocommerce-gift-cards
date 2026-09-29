@@ -1,21 +1,21 @@
 === PW WooCommerce Gift Cards ===
 Contributors: pimwick
 Donate link: https://paypal.me/pimwick
-Tags: woocommerce, gift cards, gift certificates, vouchers, store credit
+Tags: gift cards, gift card, gift certificates, vouchers, store credit
 Requires at least: 4.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.51
+Stable tag: 2.52
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Sell gift cards to your WooCommerce store, in just a few minutes!
+Sell WooCommerce gift cards in minutes. Customers choose an amount, email it to a recipient, and redeem the balance at checkout.
 
 == Description ==
 
 **Your WooCommerce store should offer gift cards!**
 
-Gift Cards are convenient and increase sales organically. the WooCommerce Gift Cards plugin makes it easy to sell gift cards to your store. So easy to get started, you can be selling gift cards for your WooCommerce store in 5 minutes!
+Gift Cards are convenient and increase sales organically. The PW WooCommerce Gift Cards plugin makes it easy to sell gift cards in your store. So easy to get started, you can be selling gift cards for your WooCommerce store in 5 minutes!
 
 The PW WooCommerce Gift Cards plugin is designed for online stores using WooCommerce, enabling them to sell digital gift cards seamlessly. With this plugin, customers can purchase gift cards by selecting a predefined amount, entering the recipient’s email, and adding a personalized message. The recipient receives an email containing the gift card code, which they can apply during checkout to redeem the balance.
 
@@ -101,7 +101,36 @@ The following currency switcher plugins are supported:
 5. One-click creation of the Gift Card product. Easily customized to suit your needs.
 6. See your gift card liability at a glance. View details about individual cards.
 
+== Frequently Asked Questions ==
+
+**How do customers redeem a gift card?**
+
+The recipient enters the gift card number on the cart or checkout page, or clicks the link in their gift card email to add it automatically. The balance is applied after tax, just like cash, and the new balance is shown on the cart and checkout pages.
+
+**Do recipients need an account?**
+
+No. Gift cards are not tied to a customer account, so guests can receive and redeem them.
+
+**Does it work with the block-based Cart and Checkout?**
+
+Yes. It works with both the classic and the WooCommerce Blocks Cart and Checkout pages, and it is compatible with High Performance Order Storage (HPOS).
+
+**Can customers enter their own amount?**
+
+Custom amounts, with an optional minimum and maximum, are included in <a href="https://www.pimwick.com/gift-cards/">PW WooCommerce Gift Cards Pro</a>.
+
+**Can I sell physical gift cards?**
+
+Yes, with <a href="https://www.pimwick.com/gift-cards/">the Pro version</a>. Import your existing gift card numbers and balances, then redeem them online or in your physical store.
+
+**Where can I get the Pro version?**
+
+Buy the Pro version here: <a href="https://www.pimwick.com/gift-cards/">https://www.pimwick.com/gift-cards/</a>
+
 == Changelog ==
+
+= 2.52 =
+* Tweaks to README.txt Bug fixes and code cleanup.
 
 = 2.51 =
 * Update to use Font Awesome Free 7.3.1.
@@ -130,15 +159,12 @@ The following currency switcher plugins are supported:
 = 2.43 =
 * Fix PHP 8.4 fatal when summing gift card amounts on orders.
 
-= 2.42 =
-* Add configurable classic checkout location for applied gift card totals. Confirmed compatibility with WordPress 7.0. More updates for WordPress 7.0. Other bug fixes.
-
 = Previous versions =
 * See changelog.txt
 
 == Upgrade Notice ==
 
-= 2.51 =
-* Update to use Font Awesome Free 7.3.1.
+= 2.52 =
+* Tweaks to README.txt Bug fixes and code cleanup.
 
 

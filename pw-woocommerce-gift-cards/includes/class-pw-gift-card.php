@@ -376,6 +376,28 @@ class PW_Gift_Card {
         return $gift_card;
     }
 
+    public static function random_card_number( $product_id = 0 ) {
+
+        $card_number = '';
+
+        for ( $section = 0; $section < PWGC_RANDOM_CARD_NUMBER_SECTIONS; $section++ ) {
+            for ( $code = 0; $code < PWGC_RANDOM_CARD_NUMBER_SECTION_LENGTH; $code++ ) {
+                $random = str_shuffle( PWGC_RANDOM_CARD_NUMBER_CHARSET );
+                $card_number .= $random[0];
+            }
+
+            if ( $section + 1 < PWGC_RANDOM_CARD_NUMBER_SECTIONS ) {
+                $card_number .= '-';
+            }
+        }
+
+        return apply_filters(
+            'pw_gift_cards_random_card_number',
+            $card_number,
+            absint( $product_id )
+        );
+    }
+
 
     /*
      *
@@ -410,28 +432,6 @@ class PW_Gift_Card {
         PW_Gift_Card_Activity::record( $this->get_id(), $action, $amount, $note, $reference_activity_id );
 
         do_action( 'pwgc_activity_' . $action, $this, $amount, $note, $reference_activity_id );
-    }
-
-    public static function random_card_number( $product_id = 0 ) {
-
-        $card_number = '';
-
-        for ( $section = 0; $section < PWGC_RANDOM_CARD_NUMBER_SECTIONS; $section++ ) {
-            for ( $code = 0; $code < PWGC_RANDOM_CARD_NUMBER_SECTION_LENGTH; $code++ ) {
-                $random = str_shuffle( PWGC_RANDOM_CARD_NUMBER_CHARSET );
-                $card_number .= $random[0];
-            }
-
-            if ( $section + 1 < PWGC_RANDOM_CARD_NUMBER_SECTIONS ) {
-                $card_number .= '-';
-            }
-        }
-
-        return apply_filters(
-            'pw_gift_cards_random_card_number',
-            $card_number,
-            absint( $product_id )
-        );
     }
 }
 

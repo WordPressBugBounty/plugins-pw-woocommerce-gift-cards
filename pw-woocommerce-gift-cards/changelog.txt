@@ -1,3 +1,6 @@
+= 2.52 =
+* Tweaks to README.txt Bug fixes and code cleanup.
+
 = 2.51 =
 * Update to use Font Awesome Free 7.3.1.
 

@@ -397,73 +397,45 @@ final class PW_Gift_Cards_Redeeming {
             if ( $gift_card->get_id() ) {
                 // Fast-path check: order item meta (optimization)
                 if ( !$line->meta_exists( '_pw_gift_card_debited' ) ) {
-                    // Database-level idempotency check: verify no duplicate debit exists
-                    // This prevents race conditions where multiple hooks fire simultaneously
-                    if ( !$this->has_redemption_been_processed( $gift_card->get_id(), $order_id, $order_item_id, $line->get_amount() ) ) {
-                        $debit_amount = apply_filters( 'pwgc_debit_amount', ( $line->get_amount() * -1 ), $gift_card, $order_item_id, $line, $order );
+                    if ( !$this->lock_redemption( $order_item_id ) ) {
+                        continue;
+                    }
 
-                        if ( $debit_amount != 0 ) {
-                            // Build the note with order_item_id for idempotency checking
-                            $idempotency_note = $note;
-                            if ( absint( $order_item_id ) > 0 ) {
-                                $idempotency_note .= ", order_item_id: $order_item_id";
+                    try {
+                        // Re-check under the lock; the $line meta was loaded before another request may have debited.
+                        if ( $this->is_redemption_debited( $order_item_id ) ) {
+                            continue;
+                        }
+
+                        // Database-level idempotency check: verify no duplicate debit exists
+                        if ( !$this->has_redemption_been_processed( $gift_card->get_id(), $order_id, $order_item_id, $line->get_amount() ) ) {
+                            $debit_amount = apply_filters( 'pwgc_debit_amount', ( $line->get_amount() * -1 ), $gift_card, $order_item_id, $line, $order );
+
+                            if ( $debit_amount != 0 ) {
+                                // Build the note with order_item_id for idempotency checking
+                                $idempotency_note = $note;
+                                if ( absint( $order_item_id ) > 0 ) {
+                                    $idempotency_note .= ", order_item_id: $order_item_id";
+                                }
+
+                                // Perform the debit operation
+                                $gift_card->debit( $debit_amount, $idempotency_note );
+
+                                // Mark as debited in order item meta (after successful debit)
+                                $line->add_meta_data( '_pw_gift_card_debited', true );
+                                $line->save();
                             }
-
-                            // Perform the debit operation
-                            $gift_card->debit( $debit_amount, $idempotency_note );
-
-                            // Mark as debited in order item meta (after successful debit)
+                        } else {
+                            // Redemption already processed (race condition handled), update meta for consistency
                             $line->add_meta_data( '_pw_gift_card_debited', true );
                             $line->save();
                         }
-                    } else {
-                        // Redemption already processed (race condition handled), update meta for consistency
-                        $line->add_meta_data( '_pw_gift_card_debited', true );
-                        $line->save();
+                    } finally {
+                        $this->unlock_redemption( $order_item_id );
                     }
                 }
             }
         }
-    }
-
-    /**
-     * Check if a redemption is currently active for this order/item combination.
-     * Uses net activity (debits minus credits) so a failed/cancelled/refunded order
-     * that credited the card back does not block re-debit when payment succeeds.
-     *
-     * @param int $gift_card_id The gift card ID
-     * @param int $order_id The order ID
-     * @param int $order_item_id The order item ID
-     * @param float $amount The redemption amount (for additional verification)
-     * @return bool True if net redemption matches the line amount, false otherwise
-     */
-    private function has_redemption_been_processed( $gift_card_id, $order_id, $order_item_id, $amount ) {
-        global $wpdb;
-
-        // Build search patterns for the note field
-        // Notes typically look like: "order_id: 123, order_item_id: 456" or variations
-        $order_id_pattern = "order_id: $order_id";
-        $order_item_pattern = "order_item_id: $order_item_id";
-
-        // Amount with tolerance for floating point comparisons (convert to negative for debit)
-        $expected_debit = floatval( $amount ) * -1;
-        $amount_tolerance = 0.01;
-
-        $net_amount = $wpdb->get_var( $wpdb->prepare( "
-            SELECT COALESCE( SUM( amount ), 0 )
-            FROM {$wpdb->pimwick_gift_card_activity}
-            WHERE pimwick_gift_card_id = %d
-            AND action = 'transaction'
-            AND amount IS NOT NULL
-            AND note LIKE %s
-            AND note LIKE %s
-        ",
-            $gift_card_id,
-            '%' . $wpdb->esc_like( $order_id_pattern ) . '%',
-            '%' . $wpdb->esc_like( $order_item_pattern ) . '%'
-        ) );
-
-        return ( floatval( $net_amount ) <= ( $expected_debit + $amount_tolerance ) );
     }
 
     function credit_gift_cards( $order_id, $order, $note ) {
@@ -475,18 +447,32 @@ final class PW_Gift_Cards_Redeeming {
             $gift_card = new PW_Gift_Card( $line->get_card_number() );
             if ( $gift_card->get_id() ) {
                 if ( $line->meta_exists( '_pw_gift_card_debited' ) ) {
-                    $credit_amount = apply_filters( 'pwgc_credit_amount', $line->get_amount(), $gift_card, $order_item_id, $line, $order );
-
-                    if ( $credit_amount ) {
-                        if ( absint( $order_item_id ) > 0 ) {
-                            $note .= ", order_item_id: $order_item_id";
-                        }
-
-                        $gift_card->credit( $credit_amount, $note );
+                    if ( !$this->lock_redemption( $order_item_id ) ) {
+                        continue;
                     }
 
-                    $line->delete_meta_data( '_pw_gift_card_debited' );
-                    $line->save();
+                    try {
+                        // Re-check under the lock; another request may have already credited this line.
+                        if ( !$this->is_redemption_debited( $order_item_id ) ) {
+                            continue;
+                        }
+
+                        $credit_amount = apply_filters( 'pwgc_credit_amount', $line->get_amount(), $gift_card, $order_item_id, $line, $order );
+
+                        if ( $credit_amount ) {
+                            $item_note = $note;
+                            if ( absint( $order_item_id ) > 0 ) {
+                                $item_note .= ", order_item_id: $order_item_id";
+                            }
+
+                            $gift_card->credit( $credit_amount, $item_note );
+                        }
+
+                        $line->delete_meta_data( '_pw_gift_card_debited' );
+                        $line->save();
+                    } finally {
+                        $this->unlock_redemption( $order_item_id );
+                    }
                 }
             }
         }
@@ -943,6 +929,74 @@ final class PW_Gift_Cards_Redeeming {
                 <?php
             }
         }
+    }
+
+    /*
+     *
+     * Private methods
+     *
+     */
+
+    // Serializes debits and credits per redemption line so concurrent order hooks cannot apply them twice.
+    private function lock_redemption( $order_item_id ) {
+        global $wpdb;
+
+        $acquired = $wpdb->get_var( $wpdb->prepare( "SELECT GET_LOCK(%s, 10)", 'pwgc_redeem_' . absint( $order_item_id ) ) );
+
+        return ( $acquired == '1' );
+    }
+
+    private function unlock_redemption( $order_item_id ) {
+        global $wpdb;
+
+        $wpdb->query( $wpdb->prepare( "SELECT RELEASE_LOCK(%s)", 'pwgc_redeem_' . absint( $order_item_id ) ) );
+    }
+
+    // Reads the debited flag from the database, bypassing the meta cache primed before the lock was acquired.
+    private function is_redemption_debited( $order_item_id ) {
+        wp_cache_delete( $order_item_id, 'order_item_meta' );
+
+        return (bool) wc_get_order_item_meta( $order_item_id, '_pw_gift_card_debited' );
+    }
+
+    /**
+     * Check if a redemption is currently active for this order/item combination.
+     * Uses net activity (debits minus credits) so a failed/cancelled/refunded order
+     * that credited the card back does not block re-debit when payment succeeds.
+     *
+     * @param int $gift_card_id The gift card ID
+     * @param int $order_id The order ID
+     * @param int $order_item_id The order item ID
+     * @param float $amount The redemption amount (for additional verification)
+     * @return bool True if net redemption matches the line amount, false otherwise
+     */
+    private function has_redemption_been_processed( $gift_card_id, $order_id, $order_item_id, $amount ) {
+        global $wpdb;
+
+        // Build search patterns for the note field
+        // Notes typically look like: "order_id: 123, order_item_id: 456" or variations
+        $order_id_pattern = "order_id: $order_id";
+        $order_item_pattern = "order_item_id: $order_item_id";
+
+        // Amount with tolerance for floating point comparisons (convert to negative for debit)
+        $expected_debit = floatval( $amount ) * -1;
+        $amount_tolerance = 0.01;
+
+        $net_amount = $wpdb->get_var( $wpdb->prepare( "
+            SELECT COALESCE( SUM( amount ), 0 )
+            FROM {$wpdb->pimwick_gift_card_activity}
+            WHERE pimwick_gift_card_id = %d
+            AND action = 'transaction'
+            AND amount IS NOT NULL
+            AND note LIKE %s
+            AND note LIKE %s
+        ",
+            $gift_card_id,
+            '%' . $wpdb->esc_like( $order_id_pattern ) . '%',
+            '%' . $wpdb->esc_like( $order_item_pattern ) . '%'
+        ) );
+
+        return ( floatval( $net_amount ) <= ( $expected_debit + $amount_tolerance ) );
     }
 }
 

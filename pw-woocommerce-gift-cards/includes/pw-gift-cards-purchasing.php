@@ -346,6 +346,9 @@ final class PW_Gift_Cards_Purchasing {
             }
 
             try {
+                // Meta read before the lock is cached; clear it so the re-check sees other requests' writes.
+                wp_cache_delete( $order_item_id, 'order_item_meta' );
+
                 // Re-check under the lock to avoid race conditions between concurrent requests.
                 if ( wc_get_order_item_meta( $order_item_id, PWGC_GIFT_CARDS_CREATED_META_KEY ) ) {
                     continue;
