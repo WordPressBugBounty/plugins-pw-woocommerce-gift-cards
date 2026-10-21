@@ -1,3 +1,6 @@
+= 2.53 =
+* Bug fixes and other enhancements.
+
 = 2.52 =
 * Tweaks to README.txt Bug fixes and code cleanup.
 

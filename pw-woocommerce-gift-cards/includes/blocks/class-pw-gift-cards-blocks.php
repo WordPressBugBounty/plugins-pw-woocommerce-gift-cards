@@ -13,6 +13,10 @@ final class PW_Gift_Cards_Blocks {
     }
 
     function site_uses_cart_or_checkout_blocks() {
+        if ( ! function_exists( 'wc_get_page_id' ) ) {
+            return false;
+        }
+
         $page_ids = array(
             wc_get_page_id( 'cart' ),
             wc_get_page_id( 'checkout' ),

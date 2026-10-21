@@ -5,7 +5,7 @@ Tags: gift cards, gift card, gift certificates, vouchers, store credit
 Requires at least: 4.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.52
+Stable tag: 2.53
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -129,6 +129,9 @@ Buy the Pro version here: <a href="https://www.pimwick.com/gift-cards/">https://
 
 == Changelog ==
 
+= 2.53 =
+* Bug fixes and other enhancements.
+
 = 2.52 =
 * Tweaks to README.txt Bug fixes and code cleanup.
 
@@ -156,15 +159,12 @@ Buy the Pro version here: <a href="https://www.pimwick.com/gift-cards/">https://
 = 2.44 =
 * Optional minimum payment amount when redeeming gift cards. Full-balance zero checkout bypasses the minimum. Other bug fixes. Additional YayCurrency integration for gift cards. Fix YayCommerce currency symbol in admin dashboard. Integration for PayPal v. 4.1.0. Other bug fixes. Confirmed compatibility with WooCommerce 10.9.
 
-= 2.43 =
-* Fix PHP 8.4 fatal when summing gift card amounts on orders.
-
 = Previous versions =
 * See changelog.txt
 
 == Upgrade Notice ==
 
-= 2.52 =
-* Tweaks to README.txt Bug fixes and code cleanup.
+= 2.53 =
+* Bug fixes and other enhancements.
 
 
