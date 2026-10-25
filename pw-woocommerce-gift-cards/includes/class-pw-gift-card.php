@@ -240,7 +240,7 @@ class PW_Gift_Card {
         if ( $amount >= 0 ) {
             wp_die( __( 'Amount deducted should be less than zero.', 'pw-woocommerce-gift-cards' ) );
         }
-        $this->adjust_balance( $amount, $note );
+        return $this->adjust_balance( $amount, $note );
     }
 
     public function adjust_balance( $amount, $note = '' ) {
@@ -274,6 +274,8 @@ class PW_Gift_Card {
             $this->balance_cache = false;
 
             $this->log_activity( 'transaction', $amount, $note );
+
+            return $amount;
         } finally {
             if ( $lock_key !== null ) {
                 $wpdb->query( $wpdb->prepare( "SELECT RELEASE_LOCK(%s)", $lock_key ) );

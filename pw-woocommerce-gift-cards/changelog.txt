@@ -1,3 +1,6 @@
+= 2.54 =
+* Redeeming checkout updates.
+
 = 2.53 =
 * Bug fixes and other enhancements.
 

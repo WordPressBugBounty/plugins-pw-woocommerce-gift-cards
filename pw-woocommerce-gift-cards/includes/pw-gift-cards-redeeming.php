@@ -277,6 +277,35 @@ final class PW_Gift_Cards_Redeeming {
     }
 
     /**
+     * When a debit is capped by the remaining balance, store that amount on the order and
+     * raise the order total by the difference.
+     */
+    private function reconcile_capped_gift_card_debit( $order, $line, $requested_amount, $applied_amount ) {
+        $decimals = wc_get_price_decimals();
+        $requested_amount = round( floatval( $requested_amount ), $decimals );
+        $applied_amount = round( abs( floatval( $applied_amount ) ), $decimals );
+
+        if ( $applied_amount + ( 1 / pow( 10, $decimals ) ) >= $requested_amount ) {
+            return;
+        }
+
+        $line->set_amount( $applied_amount );
+
+        if ( ! $this->set_order_total_after_gift_cards( $order ) ) {
+            $order->set_total( max( 0, $this->calculate_order_total( $order ) ) );
+            $order->save();
+        }
+
+        $order->add_order_note( sprintf(
+            // translators: %1$s is the gift card number, %2$s is the amount charged to the card, %3$s is the amount originally applied.
+            __( 'Gift card %1$s covered %2$s of the %3$s applied to this order. The order total was updated to match the amount charged to the card.', 'pw-woocommerce-gift-cards' ),
+            $line->get_card_number(),
+            wc_price( $applied_amount ),
+            wc_price( $requested_amount )
+        ) );
+    }
+
+    /**
      * Set the payable order total after gift card redemption without calling calculate_totals().
      * Full recalculation can strip shipping tax from payment gateway amount breakdowns.
      *
@@ -418,8 +447,14 @@ final class PW_Gift_Cards_Redeeming {
                                     $idempotency_note .= ", order_item_id: $order_item_id";
                                 }
 
-                                // Perform the debit operation
-                                $gift_card->debit( $debit_amount, $idempotency_note );
+                                $line_amount = floatval( $line->get_amount() );
+                                $applied_amount = abs( floatval( $gift_card->debit( $debit_amount, $idempotency_note ) ) );
+
+                                // A concurrent checkout may already have taken part of the balance.
+                                // Keep this order's discount equal to the amount actually charged to the card.
+                                if ( abs( abs( floatval( $debit_amount ) ) - $line_amount ) < ( 1 / pow( 10, wc_get_price_decimals() ) ) ) {
+                                    $this->reconcile_capped_gift_card_debit( $order, $line, $line_amount, $applied_amount );
+                                }
 
                                 // Mark as debited in order item meta (after successful debit)
                                 $line->add_meta_data( '_pw_gift_card_debited', true );
