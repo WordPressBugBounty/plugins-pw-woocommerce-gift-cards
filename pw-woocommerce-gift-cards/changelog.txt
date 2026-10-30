@@ -1,3 +1,6 @@
+= 2.55 =
+* Cast shipping and tax amounts to prevent PHP 8 TypeError.
+
 = 2.54 =
 * Redeeming checkout updates.
 

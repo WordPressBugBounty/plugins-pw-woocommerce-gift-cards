@@ -271,7 +271,7 @@ final class PW_Gift_Cards_Redeeming {
             $fees_total += round( $item->get_total(), $wc_price_decimals );
         }
 
-        $new_total = round( $cart_total + $fees_total + $order->get_shipping_total() + $order->get_cart_tax() + $order->get_shipping_tax(), $wc_price_decimals );
+        $new_total = round( $cart_total + $fees_total + (float) $order->get_shipping_total() + (float) $order->get_cart_tax() + (float) $order->get_shipping_tax(), $wc_price_decimals );
 
         return $new_total;
     }

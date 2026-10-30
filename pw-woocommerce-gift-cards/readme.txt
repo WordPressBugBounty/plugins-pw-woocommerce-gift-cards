@@ -5,7 +5,7 @@ Tags: gift cards, gift card, gift certificates, vouchers, store credit
 Requires at least: 4.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.54
+Stable tag: 2.55
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -129,6 +129,9 @@ Buy the Pro version here: <a href="https://www.pimwick.com/gift-cards/">https://
 
 == Changelog ==
 
+= 2.55 =
+* Cast shipping and tax amounts to prevent PHP 8 TypeError.
+
 = 2.54 =
 * Redeeming checkout updates.
 
@@ -156,15 +159,12 @@ Buy the Pro version here: <a href="https://www.pimwick.com/gift-cards/">https://
 = 2.46 =
 * YayCurrency compatibility issue fix.
 
-= 2.45 =
-* Fix gift card JS interfering with non-gift-card variable product add-to-cart. Fix custom amount query string parsing for European number formats. Fix gift card rounding residual on zero-total orders.
-
 = Previous versions =
 * See changelog.txt
 
 == Upgrade Notice ==
 
-= 2.54 =
-* Redeeming checkout updates.
+= 2.55 =
+* Cast shipping and tax amounts to prevent PHP 8 TypeError.
 
 
