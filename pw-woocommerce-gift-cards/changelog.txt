@@ -1,3 +1,6 @@
+= 2.56 =
+* Confirmed compatibility with WooCommerce 11.3.
+
 = 2.55 =
 * Cast shipping and tax amounts to prevent PHP 8 TypeError.
 
