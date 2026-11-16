@@ -2,6 +2,7 @@
 
 defined( 'ABSPATH' ) or exit;
 
+use Automattic\WooCommerce\StoreApi\Exceptions\RouteException;
 use Automattic\WooCommerce\StoreApi\Schemas\V1\CartSchema;
 
 if ( ! class_exists( 'PW_Gift_Cards_Blocks_Endpoint' ) ) :
@@ -44,10 +45,9 @@ final class PW_Gift_Cards_Blocks_Endpoint {
         $remove_card = ! empty( $data['remove'] );
 
         if ( '' === $card_number ) {
-            return new \WP_Error(
+            $this->throw_store_api_error(
                 'pwgc_number_missing',
-                __( 'Gift card number is required.', 'pw-woocommerce-gift-cards' ),
-                array( 'status' => 400 )
+                __( 'Gift card number is required.', 'pw-woocommerce-gift-cards' )
             );
         }
 
@@ -63,7 +63,26 @@ final class PW_Gift_Cards_Blocks_Endpoint {
             return array( 'success' => true );
         }
 
-        return new \WP_Error( 'pwgc_apply_error', $result, array( 'status' => 400 ) );
+        // Store API ignores callback return values (including WP_Error) and only
+        // surfaces thrown exceptions to the Blocks Cart/Checkout UI.
+        $this->throw_store_api_error( 'pwgc_apply_error', $result );
+    }
+
+    /**
+     * Raise an error that the Store API cart/extensions endpoint will return to the client.
+     *
+     * @param string $code    Error code.
+     * @param string $message Human-readable error message.
+     * @throws RouteException|\Exception
+     */
+    function throw_store_api_error( $code, $message ) {
+        $message = wp_strip_all_tags( (string) $message );
+
+        if ( class_exists( RouteException::class ) ) {
+            throw new RouteException( $code, $message, 400 );
+        }
+
+        throw new \Exception( $message, 400 );
     }
 
     /**

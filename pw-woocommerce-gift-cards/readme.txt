@@ -5,7 +5,7 @@ Tags: gift cards, gift card, gift certificates, vouchers, store credit
 Requires at least: 4.5
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.56
+Stable tag: 2.57
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -129,6 +129,9 @@ Buy the Pro version here: <a href="https://www.pimwick.com/gift-cards/">https://
 
 == Changelog ==
 
+= 2.57 =
+* Blocks notification for invalid gift card number.
+
 = 2.56 =
 * Confirmed compatibility with WooCommerce 11.3.
 
@@ -156,15 +159,12 @@ Buy the Pro version here: <a href="https://www.pimwick.com/gift-cards/">https://
 = 2.48 =
 * Additional integration for YayCurrency.
 
-= 2.47 =
-* Prevent duplicate gift cards when order completion runs concurrently.
-
 = Previous versions =
 * See changelog.txt
 
 == Upgrade Notice ==
 
-= 2.56 =
-* Confirmed compatibility with WooCommerce 11.3.
+= 2.57 =
+* Blocks notification for invalid gift card number.
 
 

@@ -1,3 +1,6 @@
+= 2.57 =
+* Blocks notification for invalid gift card number.
+
 = 2.56 =
 * Confirmed compatibility with WooCommerce 11.3.
 
